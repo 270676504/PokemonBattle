@@ -25,10 +25,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
  INCLUDEPATH +="./include/"
 SOURCES += \
     src/main.cpp \
-    src/mainwindow.cpp
+    src/mainwindow.cpp \
+    src/pokemon.cpp \
+    player.cpp \
+    skill.cpp
 
 HEADERS += \
-    include/mainwindow.h
+    include/mainwindow.h \
+    include/pokemon.h \
+    player.h \
+    skill.h
 
 FORMS += \
     ui/mainwindow.ui
