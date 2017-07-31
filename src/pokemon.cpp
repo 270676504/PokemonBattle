@@ -1,7 +1,7 @@
-#include "pokemon.h"
+﻿#include "pokemon.h"
 
 AbstractPokemon::AbstractPokemon(QString name, Stature racialValue, Nature nature1, Nature nature2)
-    :name(name),racialValue(racialValue),nature(nature1,nature2)
+    //:name(name),racialValue(racialValue),nature(nature1,nature2)
 {
 
 }

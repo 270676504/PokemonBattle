@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+QT += sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = PokemonBattle
@@ -28,13 +28,18 @@ SOURCES += \
     src/mainwindow.cpp \
     src/pokemon.cpp \
     player.cpp \
-    skill.cpp
+    skill.cpp \
+    game.cpp
 
 HEADERS += \
     include/mainwindow.h \
     include/pokemon.h \
     player.h \
-    skill.h
+    skill.h \
+    game.h
 
 FORMS += \
     ui/mainwindow.ui
+
+RESOURCES += \
+    resource.qrc
