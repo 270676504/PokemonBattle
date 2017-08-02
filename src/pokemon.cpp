@@ -3,6 +3,7 @@
 #include <QSqlQuery>
 #include <QDir>
 #include <qdebug>
+#include <QTime>
 AbstractPokemon::AbstractPokemon(int id)
     :m_id(id)
 {
@@ -40,13 +41,21 @@ AbstractPokemon::AbstractPokemon(int id)
     db.close();
 }
 
-Pokemon::Pokemon(int id)
-    :AbstractPokemon(id)
+Pokemon::Pokemon(int id,int level)
+    :AbstractPokemon(id),m_effortValue({0,0,0,0,0,0}),m_level(level)
 {
-//    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
-//    for(int i=0; i<6; i++)
-//    {
-//        int test =qrand()%31;  //个体值
+    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+    m_individualValue.hp = qrand()%32;
+    m_individualValue.atk = qrand()%32;
+    m_individualValue.def = qrand()%32;
+    m_individualValue.spatk = qrand()%32;
+    m_individualValue.spdef = qrand()%32;
+    m_individualValue.speed = qrand()%32;
 
-//    }
+    m_currentStatus.hp=( m_racialValue.hp*2+ m_individualValue.hp)*m_level/100+10+m_level;
+    m_currentStatus.atk=(m_racialValue.atk*2+m_individualValue.atk)*m_level/100+5;
+    m_currentStatus.def=(m_racialValue.def*2+m_individualValue.def)*m_level/100+5;
+    m_currentStatus.spatk=(m_racialValue.spatk*2+m_individualValue.spatk)*m_level/100+5;
+    m_currentStatus.spdef=(m_racialValue.spdef*2+m_individualValue.spdef)*m_level/100+5;
+    m_currentStatus.speed=(m_racialValue.speed*2+m_individualValue.speed)*m_level/100+5;
 }

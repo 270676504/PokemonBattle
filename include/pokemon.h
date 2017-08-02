@@ -42,7 +42,7 @@ public:
     QVector<AbstractPokemon::Nature> nature(){return m_nature;}
     int id(){return m_id;}
 
-private:
+protected:
     QString m_name;           //名字
     Stature m_racialValue;	//种族值
     QVector<AbstractPokemon::Nature> m_nature;
@@ -52,7 +52,7 @@ private:
 
 class Pokemon :public AbstractPokemon{
 public:
-    explicit Pokemon(int id);
+    explicit Pokemon(int id, int level = 5);
     QString nickName(){return m_nickName;}
     Stature individualValue(){return m_individualValue;}
     Stature effortValue(){return m_effortValue;}
