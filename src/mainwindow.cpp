@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setBackgroundBrush(QPixmap(":/image/Time-For-Lunch-2.jpg"));
     ui->graphicsView->setCacheMode(QGraphicsView::CacheBackground);
     ui->graphicsView->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-    BattleScene *scene =new BattleScene (-350, -350, 700, 700);
+    BattleScene *scene =new BattleScene ();
     ui->graphicsView->setScene(scene);
 }
 

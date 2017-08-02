@@ -6,7 +6,6 @@ MainInfo::MainInfo(QWidget *parent) :
     ui(new Ui::MainInfo)
 {
     ui->setupUi(this);
-    AbstractPokemon(1);
 }
 
 MainInfo::~MainInfo()
@@ -21,9 +20,13 @@ void MainInfo::setInfo(Pokemon *pokemon)
     battleStatus=pokemon->currentStatus();
     m_pokemon=pokemon;
     int level = pokemon->level();
-    ui->lblLv->setText(QString::number(level));
-    ui->lblName->setText(pokemon->name());
     int hpMax=(pokemon->racialValue().hp*2+pokemon->individualValue().hp)*level/100+10+level;
     int currentHp=pokemon->currentStatus().hp;
+    int exp = pokemon->exp();
+    int hpProportion = currentHp*100/hpMax;
+    ui->lblLv->setText(QString::number(level));
+    ui->lblName->setText(pokemon->name());
     ui->lblHp->setText(QString("%1/%2").arg(QString::number(currentHp)).arg(QString::number(hpMax)));
+    ui->progressBar_exp->setValue(1); //以后写,经验最大值还没定
+    ui->progressBar_hp->setValue(hpProportion);
 }

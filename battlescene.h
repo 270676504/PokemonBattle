@@ -11,7 +11,6 @@ class BattleScene : public QGraphicsScene
         Q_OBJECT
 public:
     BattleScene(QObject *parent = Q_NULLPTR);
-    BattleScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = Q_NULLPTR);
 private:
     MainInfo* m_info;
     MainInfo* oppo_info;

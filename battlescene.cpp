@@ -7,14 +7,11 @@
 BattleScene::BattleScene(QObject *parent)
     :QGraphicsScene(parent)
 {
-}
-
-BattleScene::BattleScene(qreal x, qreal y, qreal width, qreal height, QObject *parent)
-    :QGraphicsScene(x,y,width,height,parent)
-{
+    Pokemon* poke=new Pokemon(3);
     m_info=new MainInfo();
     oppo_info=new MainInfo();
-
+    m_info->setInfo(poke);
+    oppo_info->setInfo(poke);
     //增加属性栏
     //坐标为屏幕中心到info左上角
     auto gpWidget=addWidget(m_info);
@@ -40,8 +37,6 @@ BattleScene::BattleScene(qreal x, qreal y, qreal width, qreal height, QObject *p
     btn3->setPos(m_width/2, 0);
     btn4->setPos(m_width*1.5, 0);
     addItem(skillButtonContainer);
-
-
 
     connect(btn1,&GraphicsButton::pressed,this,[&](){
         qDebug()<<"clicked";
