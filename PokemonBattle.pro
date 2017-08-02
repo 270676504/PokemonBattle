@@ -29,17 +29,20 @@ SOURCES += \
     src/pokemon.cpp \
     player.cpp \
     skill.cpp \
-    game.cpp
+    game.cpp \
+    maininfo.cpp
 
 HEADERS += \
     include/mainwindow.h \
     include/pokemon.h \
     player.h \
     skill.h \
-    game.h
+    game.h \
+    maininfo.h
 
 FORMS += \
-    ui/mainwindow.ui
+    ui/mainwindow.ui \
+    maininfo.ui
 
 RESOURCES += \
     resource.qrc
