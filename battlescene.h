@@ -1,7 +1,7 @@
 ﻿#ifndef BATTLESCENE_H
 #define BATTLESCENE_H
 #include <QGraphicsScene>
-
+class MainInfo;
 namespace Ui {
 class MainWindow;
 }

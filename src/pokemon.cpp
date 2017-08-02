@@ -1,13 +1,32 @@
 ﻿#include "pokemon.h"
-
-AbstractPokemon::AbstractPokemon(QString name, Stature racialValue, Nature nature1, Nature nature2)
-    //:name(name),racialValue(racialValue),nature(nature1,nature2)
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QDir>
+#include <qdebug>
+AbstractPokemon::AbstractPokemon(int id)
+    :m_id(id)
 {
+    QString dbFile("D:\\pokedex2.db");
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName(dbFile);
+    if(db.open())
+    {
+        QSqlQuery query;
+        query.exec("SELECT * from Pokemon");
+        if (query.next()) //存在记录
+        {
+//            pItem->id = query.value(i++).toInt();
+//            qDebug()<<dbFile;
+        }
+
+    }
+
+
 
 }
 
-Pokemon::Pokemon(QString name, Stature racialValue, Nature nature1, Nature nature2)
-    :AbstractPokemon(name,racialValue,nature1,nature2)
+Pokemon::Pokemon(int id)
+    :AbstractPokemon(id)
 {
 
 }

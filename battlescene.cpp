@@ -18,9 +18,9 @@ BattleScene::BattleScene(qreal x, qreal y, qreal width, qreal height, QObject *p
     //增加属性栏
     //坐标为屏幕中心到info左上角
     auto gpWidget=addWidget(m_info);
-    gpWidget->setPos(300-info1->width()/2,100-info1->height()/2);
+    gpWidget->setPos(300-m_info->width()/2,100-m_info->height()/2);
     gpWidget=addWidget(oppo_info);
-    gpWidget->setPos(-300-info1->width()/2,-200-info1->height()/2);
+    gpWidget->setPos(-300-oppo_info->width()/2,-200-oppo_info->height()/2);
 
     //增加技能栏
     QGraphicsItem *skillButtonContainer = new QGraphicsRectItem;
