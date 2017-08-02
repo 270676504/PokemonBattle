@@ -30,7 +30,9 @@ SOURCES += \
     player.cpp \
     skill.cpp \
     game.cpp \
-    maininfo.cpp
+    maininfo.cpp \
+    battlescene.cpp \
+    graphicsbutton.cpp
 
 HEADERS += \
     include/mainwindow.h \
@@ -38,7 +40,9 @@ HEADERS += \
     player.h \
     skill.h \
     game.h \
-    maininfo.h
+    maininfo.h \
+    battlescene.h \
+    graphicsbutton.h
 
 FORMS += \
     ui/mainwindow.ui \

@@ -1,0 +1,20 @@
+﻿#ifndef BATTLESCENE_H
+#define BATTLESCENE_H
+#include <QGraphicsScene>
+
+namespace Ui {
+class MainWindow;
+}
+
+class BattleScene : public QGraphicsScene
+{
+        Q_OBJECT
+public:
+    BattleScene(QObject *parent = Q_NULLPTR);
+    BattleScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = Q_NULLPTR);
+private:
+    MainInfo* m_info;
+    MainInfo* oppo_info;
+};
+
+#endif // BATTLESCENE_H
