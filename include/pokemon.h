@@ -15,7 +15,7 @@ public:
         int spdef;				//特殊防御力
         int speed;				//速度
     };
-    enum Nature{
+    enum Attribute{
         empty=0,        //无
         normal,         //普
         fire,           //火
@@ -36,18 +36,17 @@ public:
         dragon,         //龙
         fairy           //妖
     };
+    static const QVector<QString> word_attribute;
     explicit AbstractPokemon(int m_id);
     QString name(){return m_name;}
     Stature racialValue(){return m_racialValue;}
-    QVector<AbstractPokemon::Nature> nature(){return m_nature;}
+    QVector<AbstractPokemon::Attribute> attribute(){return m_attribute;}
     int id(){return m_id;}
-
 protected:
-    QString m_name;           //名字
-    Stature m_racialValue;	//种族值
-    QVector<AbstractPokemon::Nature> m_nature;
-//    Nature nature[2];		//属性
-    int m_id;					//口袋图鉴号码
+    int m_id;                                           //口袋图鉴号码
+    QString m_name;                                     //名字
+    Stature m_racialValue;                              //种族值
+    QVector<AbstractPokemon::Attribute> m_attribute;    //属性
 };
 
 class Pokemon :public AbstractPokemon{
@@ -59,14 +58,18 @@ public:
     Stature currentStatus(){return m_currentStatus;}
     int level(){return m_level;}
     int exp(){return m_exp;}
+    int hpMax(){return m_hpMax;}
+    void hpReduce(int value);
+protected:
 
-public:
+private:
     QString m_nickName;             //昵称
     Stature m_individualValue;      //个体值
     Stature m_effortValue;          //努力值
     Stature m_currentStatus;        //当前属性
     int m_level;					//等级
     int m_exp;                      //经验
+    int m_hpMax;
     int m_character;				//性格
 };
 

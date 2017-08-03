@@ -4,6 +4,27 @@
 #include <QDir>
 #include <qdebug>
 #include <QTime>
+
+const QVector<QString> AbstractPokemon::word_attribute={u8"无",       //0
+                                                   u8"普",       //1
+                                                   u8"火",       //2
+                                                   u8"水",       //3
+                                                   u8"草",       //4
+                                                   u8"电",       //5
+                                                   u8"冰",       //6
+                                                   u8"虫",       //7
+                                                   u8"飞",       //8
+                                                   u8"地",       //9
+                                                   u8"岩",       //10
+                                                   u8"格",       //11
+                                                   u8"超",       //12
+                                                   u8"鬼",       //13
+                                                   u8"毒",       //14
+                                                   u8"恶",       //15
+                                                   u8"钢",       //16
+                                                   u8"龙",       //17
+                                                   u8"妖"};      //18
+
 AbstractPokemon::AbstractPokemon(int id)
     :m_id(id)
 {
@@ -31,10 +52,10 @@ AbstractPokemon::AbstractPokemon(int id)
             m_racialValue.spatk= query.value(5).toInt();
             m_racialValue.spdef= query.value(6).toInt();
             m_racialValue.speed= query.value(7).toInt();
-            m_nature.push_back((AbstractPokemon::Nature)query.value(8).toInt());
+            m_attribute.push_back((AbstractPokemon::Attribute)query.value(8).toInt());
             int secondary_attribute =query.value(9).toInt();
             if(secondary_attribute){
-                m_nature.push_back((AbstractPokemon::Nature)secondary_attribute);
+                m_attribute.push_back((AbstractPokemon::Attribute)secondary_attribute);
             }
         }
     }
@@ -58,4 +79,15 @@ Pokemon::Pokemon(int id,int level)
     m_currentStatus.spatk=(m_racialValue.spatk*2+m_individualValue.spatk)*m_level/100+5;
     m_currentStatus.spdef=(m_racialValue.spdef*2+m_individualValue.spdef)*m_level/100+5;
     m_currentStatus.speed=(m_racialValue.speed*2+m_individualValue.speed)*m_level/100+5;
+
+    m_hpMax=(m_racialValue.hp*2+m_individualValue.hp)*m_level/100+10+m_level;
+}
+
+void Pokemon::hpReduce(int value)
+{
+    m_currentStatus.hp-=value;
+    if(m_currentStatus.hp==0)
+    {
+        m_currentStatus.hp=0;
+    }
 }
