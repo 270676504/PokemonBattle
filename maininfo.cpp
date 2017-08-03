@@ -19,15 +19,14 @@ void MainInfo::setInfo(Pokemon *pokemon)
     if(!pokemon)
         return;
 
-    battleStatus=pokemon->currentStatus();
     m_pokemon=pokemon;
 
-    ui->lblName->setText(pokemon->name());
-    ui->lblLv->setText(QString::number(pokemon->level()));
-    ui->lblHp->setText(QString("%1/%2").arg(QString::number(battleStatus.hp)).arg(QString::number(pokemon->hpMax())));
-    ui->progressBar_hp->setValue(battleStatus.hp * 100 / pokemon->hpMax());
+    ui->lblName->setText(m_pokemon->name());
+    ui->lblLv->setText(QString::number(m_pokemon->level()));
+    ui->lblHp->setText(QString("%1/%2").arg(QString::number(m_pokemon->currentStatus().hp)).arg(QString::number(m_pokemon->hpMax())));
+    ui->progressBar_hp->setValue(m_pokemon->currentStatus().hp * 100 / m_pokemon->hpMax());
 
-    auto attribute= pokemon->attribute();
+    auto attribute= m_pokemon->attribute();
     switch (attribute.size()) {
     case 1:
     ui->lblAttribute->setText(QString("%1").arg(AbstractPokemon::word_attribute[attribute[0]]));
@@ -38,7 +37,13 @@ void MainInfo::setInfo(Pokemon *pokemon)
     default:
         break;
     }
-    //int exp = pokemon->exp();
+    //int exp = m_pokemon->exp();
     ui->progressBar_exp->setValue(1); //以后写,经验最大值还没定
 
+}
+
+void MainInfo::refreshHp()
+{
+    ui->lblHp->setText(QString("%1/%2").arg(QString::number(m_pokemon->currentStatus().hp)).arg(QString::number(m_pokemon->hpMax())));
+    ui->progressBar_hp->setValue(m_pokemon->currentStatus().hp * 100 / m_pokemon->hpMax());
 }

@@ -4,14 +4,19 @@
 #include "graphicsbutton.h"
 #include <QPixmap>
 #include <QDebug>
+#include "skill.h"
+#include <QString>
 BattleScene::BattleScene(QObject *parent)
     :QGraphicsScene(parent)
 {
     Pokemon* poke=new Pokemon(3);
+    Pokemon* poke2=new Pokemon(5);
     m_info=new MainInfo();
     oppo_info=new MainInfo();
     m_info->setInfo(poke);
-    oppo_info->setInfo(poke);
+    DamageSkill* skill=new DamageSkill(QString("water"),AbstractSkill::AtkMode::special,80,80,80,80);
+    poke->learnSkill(skill);
+    oppo_info->setInfo(poke2);
     //增加属性栏
     //坐标为屏幕中心到info左上角
     auto gpWidget=addWidget(m_info);
@@ -38,8 +43,9 @@ BattleScene::BattleScene(QObject *parent)
     btn4->setPos(m_width*1.5, 0);
     addItem(skillButtonContainer);
 
-    connect(btn1,&GraphicsButton::pressed,this,[&](){
-        qDebug()<<"clicked";
+    connect(btn1,&GraphicsButton::pressed,this,[=](){
+       poke->useSkill(0,poke2);
+       oppo_info->refreshHp();
     });
 
     //增加敌我图片

@@ -15,10 +15,9 @@ public:
     explicit MainInfo(QWidget *parent = 0);
     ~MainInfo();
     void setInfo(Pokemon* pokemon);
-
+    void refreshHp();
 private:
     Ui::MainInfo *ui;
-    AbstractPokemon::Stature battleStatus;
     Pokemon* m_pokemon;
 };
 

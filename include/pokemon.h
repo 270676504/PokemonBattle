@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QVector>
+class AbstractSkill;
 class AbstractPokemon{
 public:
     struct Stature              //俗称6围
@@ -60,6 +61,8 @@ public:
     int exp(){return m_exp;}
     int hpMax(){return m_hpMax;}
     void hpReduce(int value);
+    void learnSkill(AbstractSkill* skill);
+    void useSkill(int index,Pokemon* target);
 protected:
 
 private:
@@ -71,6 +74,7 @@ private:
     int m_exp;                      //经验
     int m_hpMax;
     int m_character;				//性格
+    QVector<AbstractSkill*> learnedSkill;
 };
 
 

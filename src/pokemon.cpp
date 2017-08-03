@@ -4,7 +4,7 @@
 #include <QDir>
 #include <qdebug>
 #include <QTime>
-
+#include "skill.h"
 const QVector<QString> AbstractPokemon::word_attribute={u8"无",       //0
                                                    u8"普",       //1
                                                    u8"火",       //2
@@ -86,8 +86,25 @@ Pokemon::Pokemon(int id,int level)
 void Pokemon::hpReduce(int value)
 {
     m_currentStatus.hp-=value;
-    if(m_currentStatus.hp==0)
+    if(m_currentStatus.hp<=0)
     {
         m_currentStatus.hp=0;
     }
+}
+
+void Pokemon::learnSkill(AbstractSkill *skill)
+{
+    if(learnedSkill.size()<4)
+        learnedSkill.push_back(skill); //先偷个懒，后面还有
+}
+
+void Pokemon::useSkill(int index, Pokemon *target)
+{
+    qDebug()<<learnedSkill.size();
+    auto skill =learnedSkill.at(index);
+    if(skill)
+    {
+        skill->doAction(this,target);
+    }
+
 }

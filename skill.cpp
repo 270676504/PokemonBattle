@@ -1,6 +1,6 @@
 ﻿#include "skill.h"
 #include <QTime>
-
+#include <QDebug>
 
 double AbstractSkill::damageCoefficient[20][20]=
             //无,普, 火,  水, 草, 电, 冰, 虫, 飞, 地, 岩, 格, 超,  鬼, 毒, 恶, 钢, 龙, 妖,无
@@ -27,7 +27,16 @@ double AbstractSkill::damageCoefficient[20][20]=
 
 
 
-AbstractSkill::AbstractSkill()
+AbstractSkill::AbstractSkill(const QString& name, AbstractSkill::AtkMode mode, int power, int hiteRate, int ppMax, int ppCurrent)
+    :m_name(name), m_atkMode(mode),m_power(power),m_hitRate(hiteRate),m_ppMax(ppMax),m_ppCurrent(ppCurrent)
+{
+
+}
+
+
+
+DamageSkill::DamageSkill(const QString name, AbstractSkill::AtkMode mode, int power, int hiteRate, int ppMax, int ppCurrent)
+    :AbstractSkill(name, mode, power, hiteRate, ppMax, ppCurrent)
 {
 
 }
@@ -38,12 +47,12 @@ void DamageSkill::doAction(Pokemon *self, Pokemon *object)
     double coefficient=1;
     qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
     //伤害值＝[(攻击方的LV×0.4＋2)×技巧威力×攻击方的攻击（或特攻）能力值÷防御方的防御（或特防）能力值÷50＋2]×各类修正×(217～255之间)÷255
-    switch (atkMode) {
+    switch (m_atkMode) {
     case physical:
-        ret=((self->level()*0.4+2)*power*self->currentStatus().atk/object->currentStatus().def/50+2)*(qrand()%39+217)/255;
+        ret=((self->level()*0.4+2)*m_power*self->currentStatus().atk/object->currentStatus().def/50+2)*(qrand()%39+217)/255;
         break;
     case special:
-        ret=((self->level()*0.4+2)*power*self->currentStatus().spatk/object->currentStatus().spdef/50+2)*(qrand()%39+217)/255;
+        ret=((self->level()*0.4+2)*m_power*self->currentStatus().spatk/object->currentStatus().spdef/50+2)*(qrand()%39+217)/255;
         break;
     default:
         break;
@@ -55,4 +64,5 @@ void DamageSkill::doAction(Pokemon *self, Pokemon *object)
     }
     ret*=coefficient;
     object->hpReduce((int)ret);
+    qDebug()<<m_name<<m_power;
 }
