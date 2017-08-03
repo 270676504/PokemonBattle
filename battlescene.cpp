@@ -14,7 +14,7 @@ BattleScene::BattleScene(QObject *parent)
     m_info=new MainInfo();
     oppo_info=new MainInfo();
     m_info->setInfo(poke);
-    DamageSkill* skill=new DamageSkill(QString("water"),AbstractSkill::AtkMode::special,80,80,80,80);
+    DamageSkill* skill=new DamageSkill(QString("water"),AbstractPokemon::Attribute::water,AbstractSkill::AtkMode::special,80,80,80);
     poke->learnSkill(skill);
     oppo_info->setInfo(poke2);
     //增加属性栏

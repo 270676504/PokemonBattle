@@ -9,7 +9,7 @@ public:
     enum AtkMode{
         physical,special,change
     };
-    AbstractSkill(const QString& name, AbstractSkill::AtkMode mode, int power, int hiteRate, int ppMax, int ppCurrent);
+    AbstractSkill(const QString& name,AbstractPokemon::Attribute attribute, AbstractSkill::AtkMode mode, int power, int hiteRate, int ppMax);
     virtual void doAction(Pokemon* self,Pokemon* object)=0;
 public:
      static double damageCoefficient[20][20];
@@ -26,7 +26,7 @@ protected:
 
 class DamageSkill : public AbstractSkill{
 public:
-    DamageSkill(const QString name, AtkMode mode,int power,int hiteRate,int ppMax,int ppCurrent);
+    DamageSkill(const QString name,AbstractPokemon::Attribute attribute, AtkMode mode,int power,int hiteRate,int ppMax);
     virtual void doAction(Pokemon* self,Pokemon* object) override;
 
 };

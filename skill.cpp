@@ -27,16 +27,16 @@ double AbstractSkill::damageCoefficient[20][20]=
 
 
 
-AbstractSkill::AbstractSkill(const QString& name, AbstractSkill::AtkMode mode, int power, int hiteRate, int ppMax, int ppCurrent)
-    :m_name(name), m_atkMode(mode),m_power(power),m_hitRate(hiteRate),m_ppMax(ppMax),m_ppCurrent(ppCurrent)
+AbstractSkill::AbstractSkill(const QString& name,AbstractPokemon::Attribute attribute, AbstractSkill::AtkMode mode, int power, int hiteRate, int ppMax)
+    :m_name(name),m_attribute(attribute), m_atkMode(mode),m_power(power),m_hitRate(hiteRate),m_ppMax(ppMax)
 {
 
 }
 
 
 
-DamageSkill::DamageSkill(const QString name, AbstractSkill::AtkMode mode, int power, int hiteRate, int ppMax, int ppCurrent)
-    :AbstractSkill(name, mode, power, hiteRate, ppMax, ppCurrent)
+DamageSkill::DamageSkill(const QString name,AbstractPokemon::Attribute attribute, AbstractSkill::AtkMode mode, int power, int hiteRate, int ppMax)
+    :AbstractSkill(name,attribute, mode, power, hiteRate, ppMax)
 {
 
 }
@@ -57,11 +57,19 @@ void DamageSkill::doAction(Pokemon *self, Pokemon *object)
     default:
         break;
     }
-    coefficient*=damageCoefficient[self->attribute()[0]][object->attribute()[0]];
-    if(object->attribute().size()==2)
+    for(auto attribute : object->attribute())
     {
-        coefficient*=damageCoefficient[self->attribute()[0]][object->attribute()[1]];
+         coefficient*=damageCoefficient[m_attribute][attribute];
     }
+    for(auto attribute : self->attribute())
+    {
+        if(attribute==m_attribute)
+        {
+             coefficient*=1.5;
+             break;
+        }
+    }
+
     ret*=coefficient;
     object->hpReduce((int)ret);
     qDebug()<<m_name<<m_power;
