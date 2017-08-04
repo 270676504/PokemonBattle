@@ -5,8 +5,8 @@
 #include <QtWidgets>
 #include <QtCore/qmath.h>
 #include <QtCore/qstate.h>
-#include "game.h"
 
+class Player;
 namespace Ui {
 class MainWindow;
 }
@@ -21,7 +21,7 @@ public:
     void initUi();
 private:
     Ui::MainWindow *ui;
-    Game* game;
+    Player* player;
 };
 
 #endif // MAINWINDOW_H

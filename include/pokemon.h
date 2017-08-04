@@ -4,7 +4,12 @@
 #include <QObject>
 #include <QString>
 #include <QVector>
+
 class AbstractSkill;
+typedef QSharedPointer<AbstractSkill> SkillPtr;
+
+class Pokemon;
+typedef QSharedPointer<Pokemon> PokemonPtr;
 class AbstractPokemon{
 public:
     struct Stature              //俗称6围
@@ -37,6 +42,7 @@ public:
         dragon,         //龙
         fairy           //妖
     };
+
     static const QVector<QString> word_attribute;
     explicit AbstractPokemon(int m_id);
     QString name(){return m_name;}
@@ -61,8 +67,8 @@ public:
     int exp(){return m_exp;}
     int hpMax(){return m_hpMax;}
     void hpReduce(int value);
-    void learnSkill(AbstractSkill* skill);
-    void useSkill(int index,Pokemon* target);
+    void learnSkill(SkillPtr skill);
+    void useSkill(int index, PokemonPtr target);
     void reCalculateCurrentState();
 protected:
 
@@ -75,8 +81,8 @@ private:
     int m_exp;                      //经验
     int m_hpMax;
     int m_character;				//性格
-    QVector<AbstractSkill*> learnedSkill;
+    QVector<SkillPtr> learnedSkill;
 };
 
-
+typedef AbstractPokemon::Attribute PokemonAttribute;
 #endif // POKEMON_H

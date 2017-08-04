@@ -9,7 +9,7 @@ MainInfo::MainInfo(QWidget *parent) :
     //setAttribute(Qt::WA_TranslucentBackground, true); //背景透明，以后做好了在开
 }
 
-MainInfo::MainInfo(Pokemon *pokemon, QWidget *parent)
+MainInfo::MainInfo(PokemonPtr pokemon, QWidget *parent)
     :MainInfo(parent)
 {
     setInfo(pokemon);
@@ -20,7 +20,7 @@ MainInfo::~MainInfo()
     delete ui;
 }
 
-void MainInfo::setInfo(Pokemon *pokemon)
+void MainInfo::setInfo(PokemonPtr pokemon)
 {
     if(!pokemon)
         return;
@@ -48,10 +48,9 @@ void MainInfo::setInfo(Pokemon *pokemon)
 
 }
 
-void MainInfo::changePokemon(Pokemon *pokemon)
+void MainInfo::changePokemon(PokemonPtr pokemon)
 {
-    if(m_pokemon)
-        m_pokemon->reCalculateCurrentState();
+    m_pokemon->reCalculateCurrentState();
     setInfo(pokemon);
 }
 

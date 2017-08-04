@@ -5,9 +5,14 @@
 class Game
 {
 public:
+    Game* getInstance();
+    void initialization();
+private:
     Game();
     ~Game();
-    void initialization();
+    static Game* instance;
+private:
+
 };
 
 #endif // GAME_H

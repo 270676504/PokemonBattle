@@ -3,14 +3,17 @@
 
 #include <QString>
 #include "pokemon.h"
+
 class AbstractSkill
 {
 public:
     enum AtkMode{
         physical,special,change
     };
-    AbstractSkill(const QString& name,AbstractPokemon::Attribute attribute, AbstractSkill::AtkMode mode, int power);
-    virtual void doAction(Pokemon* self,Pokemon* object)=0;
+
+    AbstractSkill(const QString& name,PokemonAttribute attribute, AtkMode mode, int power);
+    ~AbstractSkill();
+    virtual void doAction(PokemonPtr self,PokemonPtr object)=0;
 public:
      static double damageCoefficient[20][20];
 protected:
@@ -27,8 +30,11 @@ protected:
 class DamageSkill : public AbstractSkill{
 public:
     DamageSkill(const QString name,AbstractPokemon::Attribute attribute, AtkMode mode,int power);
-    virtual void doAction(Pokemon* self,Pokemon* object) override;
+    ~DamageSkill();
+    virtual void doAction(PokemonPtr self, PokemonPtr object) override;
 
 };
 
+typedef QSharedPointer<AbstractSkill> SkillPtr;
+typedef AbstractSkill::AtkMode SkillAtkMode;
 #endif // SKILL_H

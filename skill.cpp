@@ -33,6 +33,10 @@ AbstractSkill::AbstractSkill(const QString& name,AbstractPokemon::Attribute attr
 
 }
 
+AbstractSkill::~AbstractSkill()
+{
+
+}
 
 
 DamageSkill::DamageSkill(const QString name,AbstractPokemon::Attribute attribute, AbstractSkill::AtkMode mode, int power)
@@ -41,7 +45,7 @@ DamageSkill::DamageSkill(const QString name,AbstractPokemon::Attribute attribute
 
 }
 
-void DamageSkill::doAction(Pokemon *self, Pokemon *object)
+void DamageSkill::doAction(PokemonPtr self, PokemonPtr object)
 {
     double ret=1;
     double coefficient=1;
@@ -73,3 +77,9 @@ void DamageSkill::doAction(Pokemon *self, Pokemon *object)
     ret*=coefficient;
     object->hpReduce((int)ret);
 }
+
+DamageSkill::~DamageSkill()
+{
+
+}
+

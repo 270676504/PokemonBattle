@@ -1,9 +1,9 @@
 ﻿#ifndef BATTLESCENE_H
 #define BATTLESCENE_H
 #include <QGraphicsScene>
-
+#include "pokemon.h"
 class MainInfo;
-class Pokemon;
+
 namespace Ui {
 class MainWindow;
 }
@@ -14,14 +14,14 @@ class BattleScene : public QGraphicsScene
         Self,Oppo
     };
 public:
-    BattleScene(Pokemon* pokemon1,Pokemon* pokemon2,QObject *parent = Q_NULLPTR);
+    BattleScene(PokemonPtr pokemon1,PokemonPtr pokemon2,QObject *parent = Q_NULLPTR);
     ~BattleScene();
-    void changePokemon(Pokemon* pokemon,Person target = Self );
+    void changePokemon(PokemonPtr pokemon,Person target = Self );
 protected:
     void setupUi();
 private:
-    Pokemon* m_pokemon;
-    Pokemon* oppo_pokemon;
+    PokemonPtr m_pokemon;
+    PokemonPtr oppo_pokemon;
     MainInfo* m_info;
     MainInfo* oppo_info;
 };

@@ -6,7 +6,7 @@
 #include <QDebug>
 #include "skill.h"
 #include <QString>
-BattleScene::BattleScene(Pokemon *pokemon1, Pokemon *pokemon2, QObject *parent)
+BattleScene::BattleScene(PokemonPtr pokemon1, PokemonPtr pokemon2, QObject *parent)
     :QGraphicsScene(parent),m_pokemon(pokemon1),oppo_pokemon(pokemon2)
 {
     setupUi();
@@ -18,7 +18,7 @@ BattleScene::~BattleScene()
     delete oppo_info;
 }
 
-void BattleScene::changePokemon(Pokemon *pokemon, BattleScene::Person target)
+void BattleScene::changePokemon(PokemonPtr pokemon, BattleScene::Person target)
 {
     if(target == Self)
     {
@@ -71,7 +71,7 @@ void BattleScene::setupUi()
        oppo_info->refreshHp();
     });
     connect(btn2,&GraphicsButton::pressed,this,[=](){
-        Pokemon* poke=new Pokemon(13);
+        PokemonPtr poke=PokemonPtr(new Pokemon(13));
         changePokemon(poke);
     });
 }

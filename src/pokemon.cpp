@@ -92,19 +92,19 @@ void Pokemon::hpReduce(int value)
     }
 }
 
-void Pokemon::learnSkill(AbstractSkill *skill)
+void Pokemon::learnSkill(SkillPtr skill)
 {
     if(learnedSkill.size()<4)
         learnedSkill.push_back(skill); //先偷个懒，后面还有
 }
 
-void Pokemon::useSkill(int index, Pokemon *target)
+void Pokemon::useSkill(int index, PokemonPtr target)
 {
     qDebug()<<learnedSkill.size();
     auto skill =learnedSkill.at(index);
     if(skill)
     {
-        skill->doAction(this,target);
+        skill->doAction(PokemonPtr(this),target);
     }
 }
 
