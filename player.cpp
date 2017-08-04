@@ -27,7 +27,7 @@ bool Player::hasTeam()
 
 PokemonPtr Player::getFirstPokemon()
 {
-    for(PokemonPtr pokemon :myTeam)
+    for(auto pokemon : myTeam)
     {
         if(pokemon->currentStatus().hp>0)
         {
