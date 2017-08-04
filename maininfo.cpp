@@ -9,6 +9,12 @@ MainInfo::MainInfo(QWidget *parent) :
     //setAttribute(Qt::WA_TranslucentBackground, true); //背景透明，以后做好了在开
 }
 
+MainInfo::MainInfo(Pokemon *pokemon, QWidget *parent)
+    :MainInfo(parent)
+{
+    setInfo(pokemon);
+}
+
 MainInfo::~MainInfo()
 {
     delete ui;
@@ -40,6 +46,13 @@ void MainInfo::setInfo(Pokemon *pokemon)
     //int exp = m_pokemon->exp();
     ui->progressBar_exp->setValue(1); //以后写,经验最大值还没定
 
+}
+
+void MainInfo::changePokemon(Pokemon *pokemon)
+{
+    if(m_pokemon)
+        m_pokemon->reCalculateCurrentState();
+    setInfo(pokemon);
 }
 
 void MainInfo::refreshHp()

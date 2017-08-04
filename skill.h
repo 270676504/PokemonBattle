@@ -9,7 +9,7 @@ public:
     enum AtkMode{
         physical,special,change
     };
-    AbstractSkill(const QString& name,AbstractPokemon::Attribute attribute, AbstractSkill::AtkMode mode, int power, int hiteRate, int ppMax);
+    AbstractSkill(const QString& name,AbstractPokemon::Attribute attribute, AbstractSkill::AtkMode mode, int power);
     virtual void doAction(Pokemon* self,Pokemon* object)=0;
 public:
      static double damageCoefficient[20][20];
@@ -19,14 +19,14 @@ protected:
     AbstractPokemon::Attribute m_attribute;       //技能属性
     AtkMode m_atkMode;                            //攻击类型（变化类还是物理攻击还是特殊攻击）
     int m_power;                                  //技能威力
-    int m_hitRate;                                //命中率 80% 记录80
+    int m_hitRate = 100;                          //命中率 80% 记录80
     int m_ppMax;                                  //最大次数
     int m_ppCurrent;                              //剩余pp
 };
 
 class DamageSkill : public AbstractSkill{
 public:
-    DamageSkill(const QString name,AbstractPokemon::Attribute attribute, AtkMode mode,int power,int hiteRate,int ppMax);
+    DamageSkill(const QString name,AbstractPokemon::Attribute attribute, AtkMode mode,int power);
     virtual void doAction(Pokemon* self,Pokemon* object) override;
 
 };

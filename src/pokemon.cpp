@@ -106,5 +106,13 @@ void Pokemon::useSkill(int index, Pokemon *target)
     {
         skill->doAction(this,target);
     }
+}
 
+void Pokemon::reCalculateCurrentState()
+{
+    m_currentStatus.atk=(m_racialValue.atk*2+m_individualValue.atk)*m_level/100+5;
+    m_currentStatus.def=(m_racialValue.def*2+m_individualValue.def)*m_level/100+5;
+    m_currentStatus.spatk=(m_racialValue.spatk*2+m_individualValue.spatk)*m_level/100+5;
+    m_currentStatus.spdef=(m_racialValue.spdef*2+m_individualValue.spdef)*m_level/100+5;
+    m_currentStatus.speed=(m_racialValue.speed*2+m_individualValue.speed)*m_level/100+5;
 }

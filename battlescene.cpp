@@ -6,19 +6,33 @@
 #include <QDebug>
 #include "skill.h"
 #include <QString>
-BattleScene::BattleScene(QObject *parent)
-    :QGraphicsScene(parent)
+BattleScene::BattleScene(Pokemon *pokemon1, Pokemon *pokemon2, QObject *parent)
+    :QGraphicsScene(parent),m_pokemon(pokemon1),oppo_pokemon(pokemon2)
 {
-    Pokemon* poke=new Pokemon(3);
-    Pokemon* poke2=new Pokemon(5);
-    m_info=new MainInfo();
-    oppo_info=new MainInfo();
-    m_info->setInfo(poke);
-    DamageSkill* skill=new DamageSkill(QString("water"),AbstractPokemon::Attribute::water,AbstractSkill::AtkMode::special,80,80,80);
-    poke->learnSkill(skill);
-    oppo_info->setInfo(poke2);
-    //增加属性栏
-    //坐标为屏幕中心到info左上角
+    setupUi();
+}
+
+BattleScene::~BattleScene()
+{
+    delete m_info;
+    delete oppo_info;
+}
+
+void BattleScene::changePokemon(Pokemon *pokemon, BattleScene::Person target)
+{
+    if(target == Self)
+    {
+        m_info->changePokemon(pokemon);
+    }else{
+        oppo_info->changePokemon(pokemon);
+    }
+}
+
+void BattleScene::setupUi()
+{
+    m_info = new MainInfo(m_pokemon);
+    oppo_info = new MainInfo(oppo_pokemon);
+
     auto gpWidget=addWidget(m_info);
     gpWidget->setPos(300-m_info->width()/2,100-m_info->height()/2);
     gpWidget=addWidget(oppo_info);
@@ -27,10 +41,12 @@ BattleScene::BattleScene(QObject *parent)
     //增加技能栏
     QGraphicsItem *skillButtonContainer = new QGraphicsRectItem;
     skillButtonContainer->setTransform(QTransform::fromScale(0.75, 0.75), true);
-    skillButtonContainer->setPos(-200, 200);
+    skillButtonContainer->setPos(-200, 400);
     skillButtonContainer->setZValue(65);
 
     QPixmap pix(":/image/image/fire.png");
+    QPixmap back(":/image/image/1b.png");
+    QPixmap front(":/image/image/1f.png");
     pix=pix.scaled(90,90);
     int m_width=pix.width()+1;
     GraphicsButton *btn1 = new GraphicsButton(pix, skillButtonContainer);
@@ -43,15 +59,19 @@ BattleScene::BattleScene(QObject *parent)
     btn4->setPos(m_width*1.5, 0);
     addItem(skillButtonContainer);
 
+    //增加敌我图片
+    auto item = addPixmap(back);
+    item->setPos(-300-pix.width()/2, 100-pix.height()/2);
+
+    item = addPixmap(front);
+    item->setPos(200-pix.width()/2, -300+pix.height()/2);
+
     connect(btn1,&GraphicsButton::pressed,this,[=](){
-       poke->useSkill(0,poke2);
+       m_pokemon->useSkill(0,oppo_pokemon);
        oppo_info->refreshHp();
     });
-
-    //增加敌我图片
-    auto item = addPixmap(pix);
-    item->setPos(-200-pix.width()/2, 100);
-
-    item = addPixmap(pix);
-    item->setPos(200-pix.width()/2, -100);
+    connect(btn2,&GraphicsButton::pressed,this,[=](){
+        Pokemon* poke=new Pokemon(13);
+        changePokemon(poke);
+    });
 }

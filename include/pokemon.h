@@ -63,6 +63,7 @@ public:
     void hpReduce(int value);
     void learnSkill(AbstractSkill* skill);
     void useSkill(int index,Pokemon* target);
+    void reCalculateCurrentState();
 protected:
 
 private:

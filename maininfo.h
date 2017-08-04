@@ -13,8 +13,11 @@ class MainInfo : public QWidget
 
 public:
     explicit MainInfo(QWidget *parent = 0);
+    explicit MainInfo(Pokemon* pokemon, QWidget *parent = 0);
     ~MainInfo();
+
     void setInfo(Pokemon* pokemon);
+    void changePokemon(Pokemon* pokemon);
     void refreshHp();
 private:
     Ui::MainInfo *ui;

@@ -3,7 +3,7 @@
 #include <QDebug>
 
 double AbstractSkill::damageCoefficient[20][20]=
-            //无,普, 火,  水, 草, 电, 冰, 虫, 飞, 地, 岩, 格, 超,  鬼, 毒, 恶, 钢, 龙, 妖,无
+            //无, 普, 火,  水, 草, 电, 冰, 虫,  飞, 地, 岩, 格,  超, 鬼, 毒,  恶, 钢, 龙, 妖,无
             {{0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18,0}, //无
              {1,  1,  1,  1,  1,  1,  1,  1,  1,  1,0.5,  1,  1,  0,  1,  1,0.5,  1,  1,0}, //普
              {2,  1,0.5,0.5,  2,  1,  2,  2,  1,  1,0.5,  1,  1,  1,  1,  1,  2,0.5,  1,0},	//火
@@ -27,16 +27,16 @@ double AbstractSkill::damageCoefficient[20][20]=
 
 
 
-AbstractSkill::AbstractSkill(const QString& name,AbstractPokemon::Attribute attribute, AbstractSkill::AtkMode mode, int power, int hiteRate, int ppMax)
-    :m_name(name),m_attribute(attribute), m_atkMode(mode),m_power(power),m_hitRate(hiteRate),m_ppMax(ppMax)
+AbstractSkill::AbstractSkill(const QString& name,AbstractPokemon::Attribute attribute, AbstractSkill::AtkMode mode, int power)
+    :m_name(name),m_attribute(attribute), m_atkMode(mode),m_power(power)
 {
 
 }
 
 
 
-DamageSkill::DamageSkill(const QString name,AbstractPokemon::Attribute attribute, AbstractSkill::AtkMode mode, int power, int hiteRate, int ppMax)
-    :AbstractSkill(name,attribute, mode, power, hiteRate, ppMax)
+DamageSkill::DamageSkill(const QString name,AbstractPokemon::Attribute attribute, AbstractSkill::AtkMode mode, int power)
+    :AbstractSkill(name,attribute, mode, power)
 {
 
 }
@@ -72,5 +72,4 @@ void DamageSkill::doAction(Pokemon *self, Pokemon *object)
 
     ret*=coefficient;
     object->hpReduce((int)ret);
-    qDebug()<<m_name<<m_power;
 }

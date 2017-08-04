@@ -11,7 +11,7 @@ GraphicsButton::GraphicsButton(const QPixmap &pixmap, QGraphicsItem *parent)
 void GraphicsButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *)
 {
     bool down = option->state & QStyle::State_Sunken;
-    QRectF r = boundingRect();
+    QRectF r = QRectF(-65, -65, 130, 130);
     QLinearGradient grad(r.topLeft(), r.bottomRight());
     grad.setColorAt(down ? 1 : 0, option->state & QStyle::State_MouseOver ? Qt::white : Qt::lightGray);
     grad.setColorAt(down ? 0 : 1, Qt::darkGray);

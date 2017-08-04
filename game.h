@@ -6,7 +6,8 @@ class Game
 {
 public:
     Game();
-
+    ~Game();
+    void initialization();
 };
 
 #endif // GAME_H

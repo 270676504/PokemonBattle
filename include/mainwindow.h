@@ -2,11 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
 #include <QtWidgets>
 #include <QtCore/qmath.h>
 #include <QtCore/qstate.h>
-
+#include "game.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,12 +18,10 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
+    void initUi();
 private:
     Ui::MainWindow *ui;
-//    QList<Pixmap *> items;
-//    QStateMachine states;
-//    QTimer timer;
+    Game* game;
 };
 
 #endif // MAINWINDOW_H

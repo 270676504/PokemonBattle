@@ -8,10 +8,7 @@ class GraphicsButton : public QGraphicsWidget
 public:
     GraphicsButton(const QPixmap &pixmap, QGraphicsItem *parent = 0);
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) override;
-    QRectF boundingRect() const override
-    {
-        return QRectF(-65, -65, 130, 130);
-    }
+    QRectF boundingRect() const override{return QRectF(-65, -65, 130, 130);}
 
     QPainterPath shape() const override
     {
@@ -22,15 +19,8 @@ public:
 signals:
     void pressed();
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *) override
-    {
-        emit pressed();
-        update();
-    }
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *) override
-    {
-        update();
-    }
+    void mousePressEvent(QGraphicsSceneMouseEvent *) override{ emit pressed();update(); }
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *) override{ update(); }
 private:
     QPixmap _pix;
 };
