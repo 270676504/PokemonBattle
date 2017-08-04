@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QVector>
-
+#include <QEnableSharedFromThis>
 class AbstractSkill;
 typedef QSharedPointer<AbstractSkill> SkillPtr;
 
@@ -56,9 +56,10 @@ protected:
     QVector<AbstractPokemon::Attribute> m_attribute;    //属性
 };
 
-class Pokemon :public AbstractPokemon{
+class Pokemon :public AbstractPokemon , public QEnableSharedFromThis<Pokemon> {
 public:
     explicit Pokemon(int id, int level = 5);
+    ~Pokemon();
     QString nickName(){return m_nickName;}
     Stature individualValue(){return m_individualValue;}
     Stature effortValue(){return m_effortValue;}

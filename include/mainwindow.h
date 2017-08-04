@@ -19,6 +19,23 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void initUi();
+private slots:
+    void on_btnBattle_clicked();
+
+    void on_btnAddPokemon_clicked();
+
+    void on_btnViewPokemon_clicked();
+
+    void on_pushButton_clicked();
+
+    void on_btnBack_clicked();
+
+    void on_btnBack2_clicked();
+
+    void on_btnAddSkill_clicked();
+
+    void on_pushButton_4_clicked();
+
 private:
     Ui::MainWindow *ui;
     Player* player;

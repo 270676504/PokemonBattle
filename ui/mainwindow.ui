@@ -31,7 +31,277 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QGraphicsView" name="graphicsView"/>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <widget class="QWidget" name="page_menu">
+       <property name="styleSheet">
+        <string notr="true">#page_menu{border-image: url(:/image/image/bg.jpg);}</string>
+       </property>
+       <widget class="QPushButton" name="btnBattle">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>170</y>
+          <width>301</width>
+          <height>111</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>战场测试</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnAddPokemon">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>20</y>
+          <width>311</width>
+          <height>111</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>添加精灵测试</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnViewPokemon">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>340</y>
+          <width>311</width>
+          <height>111</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>查看精灵</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_4">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>510</y>
+          <width>311</width>
+          <height>111</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>测试增加技能</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="page_battle">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QGraphicsView" name="graphicsView"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_test_add">
+       <widget class="QPushButton" name="pushButton">
+        <property name="geometry">
+         <rect>
+          <x>600</x>
+          <y>100</y>
+          <width>75</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>添加</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lineEdit">
+        <property name="geometry">
+         <rect>
+          <x>460</x>
+          <y>100</y>
+          <width>113</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label">
+        <property name="geometry">
+         <rect>
+          <x>460</x>
+          <y>70</y>
+          <width>301</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>输入id就行了(1~62)</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnBack">
+        <property name="geometry">
+         <rect>
+          <x>620</x>
+          <y>220</y>
+          <width>75</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>返回</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="page_add_skil">
+       <widget class="QPushButton" name="btnAddSkill">
+        <property name="geometry">
+         <rect>
+          <x>680</x>
+          <y>230</y>
+          <width>75</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>添加</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lineEdit_Id">
+        <property name="geometry">
+         <rect>
+          <x>210</x>
+          <y>150</y>
+          <width>113</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lineEdit_SkillName">
+        <property name="geometry">
+         <rect>
+          <x>600</x>
+          <y>160</y>
+          <width>113</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_2">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>130</y>
+          <width>54</width>
+          <height>12</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>队伍序号</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_3">
+        <property name="geometry">
+         <rect>
+          <x>610</x>
+          <y>130</y>
+          <width>54</width>
+          <height>12</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>技能威力</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_4">
+        <property name="geometry">
+         <rect>
+          <x>450</x>
+          <y>130</y>
+          <width>54</width>
+          <height>12</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>技能名字</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lineEdit_SkillPower">
+        <property name="geometry">
+         <rect>
+          <x>430</x>
+          <y>170</y>
+          <width>113</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_5">
+        <property name="geometry">
+         <rect>
+          <x>770</x>
+          <y>130</y>
+          <width>54</width>
+          <height>12</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>攻击属性</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="checkBox">
+        <property name="geometry">
+         <rect>
+          <x>780</x>
+          <y>160</y>
+          <width>161</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>不打钩为物理，打钩特殊</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnBack2">
+        <property name="geometry">
+         <rect>
+          <x>630</x>
+          <y>350</y>
+          <width>75</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>返回</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_6">
+        <property name="geometry">
+         <rect>
+          <x>380</x>
+          <y>220</y>
+          <width>231</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>技能属性不好选，默认为水属性吧</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>

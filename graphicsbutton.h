@@ -6,16 +6,12 @@ class GraphicsButton : public QGraphicsWidget
 {
     Q_OBJECT
 public:
+    GraphicsButton(QGraphicsItem *parent = 0);
     GraphicsButton(const QPixmap &pixmap, QGraphicsItem *parent = 0);
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) override;
     QRectF boundingRect() const override{return QRectF(-65, -65, 130, 130);}
-
-    QPainterPath shape() const override
-    {
-        QPainterPath path;
-        path.addEllipse(boundingRect());
-        return path;
-    }
+    QPainterPath shape() const override;
+    void setPix(const QPixmap &pixmap);
 signals:
     void pressed();
 protected:

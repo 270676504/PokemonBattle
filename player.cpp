@@ -1,5 +1,6 @@
 ﻿#include "player.h"
 #include "pokemon.h"
+#include <QDebug>
 Player::Player()
 {
 
@@ -35,4 +36,24 @@ PokemonPtr Player::getFirstPokemon()
     }
     qDebug("error: no pokemon can use");
     return nullptr;
+}
+
+void Player::easyViewTeam()
+{
+    for(PokemonPtr pokemon :myTeam)
+    {
+       qDebug()<<pokemon->name()<<pokemon->currentStatus().hp;
+    }
+}
+
+void Player::learnSkill(int index, SkillPtr skill)
+{
+    if(index>=myTeam.size())
+    {
+        qDebug()<<"add error";
+         return;
+    }
+
+    auto pokemon = myTeam[index];
+    pokemon->learnSkill(skill);
 }

@@ -83,6 +83,11 @@ Pokemon::Pokemon(int id,int level)
     m_hpMax=(m_racialValue.hp*2+m_individualValue.hp)*m_level/100+10+m_level;
 }
 
+Pokemon::~Pokemon()
+{
+
+}
+
 void Pokemon::hpReduce(int value)
 {
     m_currentStatus.hp-=value;
@@ -101,11 +106,11 @@ void Pokemon::learnSkill(SkillPtr skill)
 void Pokemon::useSkill(int index, PokemonPtr target)
 {
     qDebug()<<learnedSkill.size();
-    auto skill =learnedSkill.at(index);
-    if(skill)
-    {
-        skill->doAction(PokemonPtr(this),target);
-    }
+    if(index >= learnedSkill.size())
+        return;
+    const SkillPtr& skill =learnedSkill.at(index);
+    skill->doAction(sharedFromThis(),target);
+
 }
 
 void Pokemon::reCalculateCurrentState()
