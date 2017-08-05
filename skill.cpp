@@ -27,7 +27,7 @@ double AbstractSkill::damageCoefficient[20][20]=
 
 
 
-AbstractSkill::AbstractSkill(const QString& name,AbstractPokemon::Attribute attribute, AbstractSkill::AtkMode mode, int power)
+AbstractSkill::AbstractSkill(const QString& name,PokemonAttribute attribute, AtkMode mode, int power)
     :m_name(name),m_attribute(attribute), m_atkMode(mode),m_power(power)
 {
 
@@ -39,47 +39,87 @@ AbstractSkill::~AbstractSkill()
 }
 
 
-DamageSkill::DamageSkill(const QString name,AbstractPokemon::Attribute attribute, AbstractSkill::AtkMode mode, int power)
-    :AbstractSkill(name,attribute, mode, power)
+NormalSkill::NormalSkill(const QString name, PokemonAttribute attribute, AtkMode mode, int power, PowerUpStatus status)
+    :AbstractSkill(name,attribute, mode, power),m_status(status)
 {
 
 }
 
-void DamageSkill::doAction(PokemonPtr self, PokemonPtr object)
+NormalSkill::NormalSkill(const QString name, NormalSkill::PowerUpStatus status, PokemonAttribute attribute, AtkMode mode)
+    :AbstractSkill(name,attribute, mode, 0),m_status(status)
 {
-    double ret=1;
-    double coefficient=1;
-    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
-    //伤害值＝[(攻击方的LV×0.4＋2)×技巧威力×攻击方的攻击（或特攻）能力值÷防御方的防御（或特防）能力值÷50＋2]×各类修正×(217～255之间)÷255
-    switch (m_atkMode) {
-    case physical:
-        ret=((self->level()*0.4+2)*m_power*self->currentStatus().atk/object->currentStatus().def/50+2)*(qrand()%39+217)/255;
-        break;
-    case special:
-        ret=((self->level()*0.4+2)*m_power*self->currentStatus().spatk/object->currentStatus().spdef/50+2)*(qrand()%39+217)/255;
-        break;
-    default:
-        break;
-    }
-    for(auto attribute : object->attribute())
+
+}
+
+void NormalSkill::doAction(PokemonPtr self, PokemonPtr target, PokemonPtr buffTarget)
+{
+    //伤害计算
+    if(m_power)
     {
-         coefficient*=damageCoefficient[m_attribute][attribute];
-    }
-    for(auto attribute : self->attribute())
-    {
-        if(attribute==m_attribute)
+        double ret = 1;
+        double power_coefficient = 1;
+        qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+        //伤害值＝[(攻击方的LV×0.4＋2)×技巧威力×攻击方的攻击（或特攻）能力值÷防御方的防御（或特防）能力值÷50＋2]×各类修正×(217～255之间)÷255
+        switch (m_atkMode) {
+        case physical:
+            ret = m_power * ((self->level() * 0.4 + 2) *                                    //基础伤害
+                   self->currentStatus().atk / target->currentStatus().def / 50+2) *        //攻防
+                    (qrand() % 39+217)/255;                                                 //伤害浮动（217~255）/255
+            break;
+        case special:
+            ret = m_power * ((self->level() * 0.4 + 2) *
+                   self->currentStatus().spatk / target->currentStatus().spdef / 50 + 2) *
+                    (qrand() % 39 + 217) / 255;
+            break;
+        default:
+            break;
+        }
+        for(auto attribute : target->attribute())
         {
-             coefficient*=1.5;
-             break;
+             power_coefficient*=damageCoefficient[m_attribute][attribute];
+        }
+        for(auto attribute : self->attribute())
+        {
+            if(attribute==m_attribute)
+            {
+                 power_coefficient *= 1.5;
+                 break;
+            }
+        }
+        ret *= power_coefficient;
+        target->hpReduce((int)ret);
+    }
+
+    //状态提升
+    if(m_status != NONE)
+    {
+        double status_coefficient = 1.1;
+        PowerUpStatus changeValue = ATK;
+        if(m_status & DEBUFF)
+        {
+            status_coefficient=0.9;
+
+        }
+        for(int j=0;j<5;j++)
+        {
+            for(int i=0;i<5;i++)
+            {
+                if(m_status & 1)
+                {
+                    //buffTarget的atk*2,之后是def，依次类推
+                }
+                m_status = (PowerUpStatus)(m_status >> 1);
+            }
+            changeValue = (PowerUpStatus)(changeValue << 5);
         }
     }
-
-    ret*=coefficient;
-    object->hpReduce((int)ret);
 }
 
-DamageSkill::~DamageSkill()
+NormalSkill::~NormalSkill()
 {
 
 }
+
+
+
 

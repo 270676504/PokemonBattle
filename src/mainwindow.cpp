@@ -79,7 +79,7 @@ void MainWindow::on_btnAddSkill_clicked()
         mode=SkillAtkMode::physical;
     else
         mode=SkillAtkMode::special;
-    SkillPtr skill =SkillPtr(new DamageSkill(name,PokemonAttribute::water,mode,power));
+    SkillPtr skill =SkillPtr(new NormalSkill(name,PokemonAttribute::water,mode,power));
     player->learnSkill(index,skill);
 }
 
