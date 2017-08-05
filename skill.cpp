@@ -39,19 +39,19 @@ AbstractSkill::~AbstractSkill()
 }
 
 
-NormalSkill::NormalSkill(const QString name, PokemonAttribute attribute, AtkMode mode, int power, PowerUpStatus status)
-    :AbstractSkill(name,attribute, mode, power),m_status(status)
+NormalSkill::NormalSkill(const QString name, PokemonAttribute attribute, AtkMode mode, int power, QByteArray status,BuffTarget target)
+    :AbstractSkill(name,attribute, mode, power),m_status(status),m_buff_target(target)
 {
 
 }
 
-NormalSkill::NormalSkill(const QString name, NormalSkill::PowerUpStatus status, PokemonAttribute attribute, AtkMode mode)
-    :AbstractSkill(name,attribute, mode, 0),m_status(status)
+NormalSkill::NormalSkill(const QString name, QByteArray status,BuffTarget target, PokemonAttribute attribute, AtkMode mode)
+    :AbstractSkill(name,attribute, mode, 0),m_status(status),m_buff_target(target)
 {
 
 }
 
-void NormalSkill::doAction(PokemonPtr self, PokemonPtr target, PokemonPtr buffTarget)
+void NormalSkill::doAction(PokemonPtr self, PokemonPtr target)
 {
     //伤害计算
     if(m_power)
@@ -91,27 +91,12 @@ void NormalSkill::doAction(PokemonPtr self, PokemonPtr target, PokemonPtr buffTa
     }
 
     //状态提升
-    if(m_status != NONE)
+    if(!m_status.isEmpty())
     {
-        double status_coefficient = 1.1;
-        PowerUpStatus changeValue = ATK;
-        if(m_status & DEBUFF)
-        {
-            status_coefficient=0.9;
-
-        }
-        for(int j=0;j<5;j++)
-        {
-            for(int i=0;i<5;i++)
-            {
-                if(m_status & 1)
-                {
-                    //buffTarget的atk*2,之后是def，依次类推
-                }
-                m_status = (PowerUpStatus)(m_status >> 1);
-            }
-            changeValue = (PowerUpStatus)(changeValue << 5);
-        }
+        if(m_buff_target == Self)
+            self->changeStatus(m_status);
+        else
+            target->changeStatus(m_status);
     }
 }
 

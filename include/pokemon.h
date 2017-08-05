@@ -5,6 +5,7 @@
 #include <QString>
 #include <QVector>
 #include <QEnableSharedFromThis>
+#include <QByteArray>
 class AbstractSkill;
 typedef QSharedPointer<AbstractSkill> SkillPtr;
 
@@ -42,7 +43,15 @@ public:
         dragon,         //龙
         fairy           //妖
     };
-
+    enum PowerUpStatus{
+        NONE = 0, //说明：如果想提升2档atk，只需要传入ATK*2就行了
+        ATK = 1 << 0,
+        DEF = 1 << 5,
+        SPATK = 1 << 10,
+        SPDEF = 1 << 15,
+        SPEED = 1 << 20,
+        DEBUFF = 1<< 31, //if this value set 1 ,it means debuff
+    };
     static const QVector<QString> word_attribute;
     explicit AbstractPokemon(int m_id);
     QString name(){return m_name;}
@@ -71,8 +80,10 @@ public:
     void learnSkill(SkillPtr skill);
     void useSkill(int index, PokemonPtr target);
     void reCalculateCurrentState();
-protected:
+    void changeStatus(QByteArray status);
 
+protected:
+    void changeStatus(char status,int& valueToChange);
 private:
     QString m_nickName;             //昵称
     Stature m_individualValue;      //个体值
@@ -86,4 +97,5 @@ private:
 };
 
 typedef AbstractPokemon::Attribute PokemonAttribute;
+typedef AbstractPokemon::PowerUpStatus PokemonStatus;
 #endif // POKEMON_H

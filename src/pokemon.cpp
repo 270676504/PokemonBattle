@@ -110,7 +110,6 @@ void Pokemon::useSkill(int index, PokemonPtr target)
         return;
     const SkillPtr& skill =learnedSkill.at(index);
     skill->doAction(sharedFromThis(),target);
-
 }
 
 void Pokemon::reCalculateCurrentState()
@@ -120,4 +119,33 @@ void Pokemon::reCalculateCurrentState()
     m_currentStatus.spatk=(m_racialValue.spatk*2+m_individualValue.spatk)*m_level/100+5;
     m_currentStatus.spdef=(m_racialValue.spdef*2+m_individualValue.spdef)*m_level/100+5;
     m_currentStatus.speed=(m_racialValue.speed*2+m_individualValue.speed)*m_level/100+5;
+}
+
+void Pokemon::changeStatus(QByteArray status)
+{
+    if(status.size()<5)
+        return;
+    qDebug()<<currentStatus().atk<<currentStatus().def<<currentStatus().spatk<<currentStatus().spdef<<currentStatus().speed;
+    changeStatus(status.at(0),m_currentStatus.atk);
+    changeStatus(status.at(1),m_currentStatus.def);
+    changeStatus(status.at(2),m_currentStatus.spatk);
+    changeStatus(status.at(3),m_currentStatus.spdef);
+    changeStatus(status.at(4),m_currentStatus.speed);
+    qDebug()<<currentStatus().atk<<currentStatus().def<<currentStatus().spatk<<currentStatus().spdef<<currentStatus().speed;
+}
+
+void Pokemon::changeStatus(char status, int& valueToChange)
+{
+    if(status=='0')
+        return;
+
+    double coefficient=1.1;
+    if(status & DEBUFF)
+        coefficient=0.9;
+    status |= !DEBUFF;
+    for(auto i=0; i < status - '0'; i++)
+    {
+        valueToChange*=coefficient;
+    }
+
 }

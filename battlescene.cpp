@@ -74,4 +74,10 @@ void BattleScene::setupUi()
         PokemonPtr poke=PokemonPtr(new Pokemon(13));
         changePokemon(poke);
     });
+
+    connect(btn3,&GraphicsButton::pressed,this,[=](){
+
+
+
+    });
 }

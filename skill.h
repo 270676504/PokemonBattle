@@ -3,7 +3,7 @@
 
 #include <QString>
 #include "pokemon.h"
-
+#include <QByteArray>
 class AbstractSkill
 {
 public:
@@ -12,7 +12,7 @@ public:
     };
     AbstractSkill(const QString& name,PokemonAttribute attribute, AtkMode mode, int power);
     virtual ~AbstractSkill();
-    virtual void doAction(PokemonPtr self,PokemonPtr target,PokemonPtr buffTarget = PokemonPtr(nullptr))=0;
+    virtual void doAction(PokemonPtr self,PokemonPtr target)=0;
 public:
     static double damageCoefficient[20][20];    //伤害系数
 protected:
@@ -28,24 +28,19 @@ protected:
 
 class NormalSkill : public AbstractSkill{
 public:
-    enum PowerUpStatus{
-        NONE = 0, //说明：如果想提升2档atk，只需要传入ATK*2就行了
-        ATK = 1 << 0,
-        DEF = 1 << 5,
-        SPATK = 1 << 10,
-        SPDEF = 1 << 15,
-        SPEED = 1 << 20,
-        DEBUFF = 1<< 31, //if this value set 1 ,it means debuff
+    enum BuffTarget{
+        Self,Opponent
     };
     //主要攻击技能，提升状态可在最后一个参数追加
-    NormalSkill(const QString name,PokemonAttribute attribute, AtkMode mode,int power, PowerUpStatus status = NONE);
+    NormalSkill(const QString name,PokemonAttribute attribute, AtkMode mode,int power, QByteArray status = QByteArray(),BuffTarget target = Self);
     //主要变化类技能，最后两个参数可设置（其实没什么软用）
-    NormalSkill(const QString name,PowerUpStatus status,PokemonAttribute attribute=PokemonAttribute::empty,AtkMode mode=AtkMode::change);
+    NormalSkill(const QString name,QByteArray status,BuffTarget target = Self, PokemonAttribute attribute=PokemonAttribute::empty,AtkMode mode=AtkMode::change);
     ~NormalSkill();
     //如果是
-    virtual void doAction(PokemonPtr self, PokemonPtr target,PokemonPtr buffTarget = PokemonPtr(nullptr)) override;
+    virtual void doAction(PokemonPtr self, PokemonPtr target) override;
 private:
-    PowerUpStatus m_status;
+    QByteArray m_status;    //共5个字节，代表5个属性，按照atk，def，spatk，spdef，speed排列
+    BuffTarget m_buff_target;
 };
 
 typedef QSharedPointer<AbstractSkill> SkillPtr;

@@ -57,6 +57,8 @@ void MainWindow::on_pushButton_clicked()
     int id = ui->lineEdit->text().toInt();
     PokemonPtr poke= PokemonPtr(new Pokemon(id));
     player->addPokemonToTeam(poke);
+    SkillPtr skill =SkillPtr(new NormalSkill("asd","10301"));
+    player->learnSkill(0,skill);
 }
 
 void MainWindow::on_btnBack_clicked()
