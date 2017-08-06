@@ -16,7 +16,7 @@ bool Player::hasTeam()
 {
     for(PokemonPtr pokemon :myTeam)
     {
-        if(pokemon->currentStatus().hp>0)
+        if(pokemon->currentHp()>0)
         {
             return true;
         }
@@ -29,7 +29,7 @@ PokemonPtr Player::getFirstPokemon()
 {
     for(auto pokemon : myTeam)
     {
-        if(pokemon->currentStatus().hp>0)
+        if(pokemon->currentHp()>0)
         {
             return pokemon;
         }
@@ -42,7 +42,7 @@ void Player::easyViewTeam()
 {
     for(PokemonPtr pokemon :myTeam)
     {
-       qDebug()<<pokemon->name()<<pokemon->currentStatus().hp;
+       qDebug()<<pokemon->name()<<pokemon->currentHp();
     }
 }
 

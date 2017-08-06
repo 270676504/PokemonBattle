@@ -32,14 +32,14 @@ public:
         Self,Opponent
     };
     //主要攻击技能，提升状态可在最后一个参数追加
-    NormalSkill(const QString name,PokemonAttribute attribute, AtkMode mode,int power, QByteArray status = QByteArray(),BuffTarget target = Self);
+    NormalSkill(const QString name,PokemonAttribute attribute, AtkMode mode,int power, QVector<int> status = QVector<int>(),BuffTarget target = Self);
     //主要变化类技能，最后两个参数可设置（其实没什么软用）
-    NormalSkill(const QString name,QByteArray status,BuffTarget target = Self, PokemonAttribute attribute=PokemonAttribute::empty,AtkMode mode=AtkMode::change);
+    NormalSkill(const QString name,QVector<int> status,BuffTarget target = Self, PokemonAttribute attribute = PokemonAttribute::empty,AtkMode mode = AtkMode::change);
     ~NormalSkill();
-    //如果是
+
     virtual void doAction(PokemonPtr self, PokemonPtr target) override;
 private:
-    QByteArray m_status;    //共5个字节，代表5个属性，按照atk，def，spatk，spdef，speed排列
+    QVector<int> m_status;    //共5个字节，代表5个属性，按照atk，def，spatk，spdef，speed排列,传字符串就行了，例如"11111"
     BuffTarget m_buff_target;
 };
 

@@ -39,13 +39,13 @@ AbstractSkill::~AbstractSkill()
 }
 
 
-NormalSkill::NormalSkill(const QString name, PokemonAttribute attribute, AtkMode mode, int power, QByteArray status,BuffTarget target)
+NormalSkill::NormalSkill(const QString name, PokemonAttribute attribute, AtkMode mode, int power, QVector<int> status,BuffTarget target)
     :AbstractSkill(name,attribute, mode, power),m_status(status),m_buff_target(target)
 {
 
 }
 
-NormalSkill::NormalSkill(const QString name, QByteArray status,BuffTarget target, PokemonAttribute attribute, AtkMode mode)
+NormalSkill::NormalSkill(const QString name, QVector<int> status,BuffTarget target, PokemonAttribute attribute, AtkMode mode)
     :AbstractSkill(name,attribute, mode, 0),m_status(status),m_buff_target(target)
 {
 
@@ -63,12 +63,12 @@ void NormalSkill::doAction(PokemonPtr self, PokemonPtr target)
         switch (m_atkMode) {
         case physical:
             ret = m_power * ((self->level() * 0.4 + 2) *                                    //基础伤害
-                   self->currentStatus().atk / target->currentStatus().def / 50+2) *        //攻防
+                   self->currentAtk() / target->currentDef() / 50+2) *        //攻防
                     (qrand() % 39+217)/255;                                                 //伤害浮动（217~255）/255
             break;
         case special:
             ret = m_power * ((self->level() * 0.4 + 2) *
-                   self->currentStatus().spatk / target->currentStatus().spdef / 50 + 2) *
+                   self->currentSpatk() / target->currentSpdef() / 50 + 2) *
                     (qrand() % 39 + 217) / 255;
             break;
         default:

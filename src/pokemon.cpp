@@ -5,6 +5,7 @@
 #include <qdebug>
 #include <QTime>
 #include "skill.h"
+#define POWER_UP_MAX_COUNT 5
 const QVector<QString> AbstractPokemon::word_attribute={u8"无",       //0
                                                    u8"普",       //1
                                                    u8"火",       //2
@@ -73,13 +74,7 @@ Pokemon::Pokemon(int id,int level)
     m_individualValue.spdef = qrand()%32;
     m_individualValue.speed = qrand()%32;
 
-    m_currentStatus.hp=( m_racialValue.hp*2+ m_individualValue.hp)*m_level/100+10+m_level;
-    m_currentStatus.atk=(m_racialValue.atk*2+m_individualValue.atk)*m_level/100+5;
-    m_currentStatus.def=(m_racialValue.def*2+m_individualValue.def)*m_level/100+5;
-    m_currentStatus.spatk=(m_racialValue.spatk*2+m_individualValue.spatk)*m_level/100+5;
-    m_currentStatus.spdef=(m_racialValue.spdef*2+m_individualValue.spdef)*m_level/100+5;
-    m_currentStatus.speed=(m_racialValue.speed*2+m_individualValue.speed)*m_level/100+5;
-
+    m_currentHp=( m_racialValue.hp*2+ m_individualValue.hp)*m_level/100+10+m_level;
     m_hpMax=(m_racialValue.hp*2+m_individualValue.hp)*m_level/100+10+m_level;
 }
 
@@ -90,16 +85,16 @@ Pokemon::~Pokemon()
 
 void Pokemon::hpReduce(int value)
 {
-    m_currentStatus.hp-=value;
-    if(m_currentStatus.hp<=0)
+    m_currentHp -= value;
+    if(m_currentHp < 0)
     {
-        m_currentStatus.hp=0;
+        m_currentHp = 0;
     }
 }
 
 void Pokemon::learnSkill(SkillPtr skill)
 {
-    if(learnedSkill.size()<4)
+    if(learnedSkill.size() < 4)
         learnedSkill.push_back(skill); //先偷个懒，后面还有
 }
 
@@ -108,44 +103,76 @@ void Pokemon::useSkill(int index, PokemonPtr target)
     qDebug()<<learnedSkill.size();
     if(index >= learnedSkill.size())
         return;
-    const SkillPtr& skill =learnedSkill.at(index);
+    const SkillPtr& skill = learnedSkill.at(index);
     skill->doAction(sharedFromThis(),target);
 }
 
-void Pokemon::reCalculateCurrentState()
+void Pokemon::resetStatus()
 {
-    m_currentStatus.atk=(m_racialValue.atk*2+m_individualValue.atk)*m_level/100+5;
-    m_currentStatus.def=(m_racialValue.def*2+m_individualValue.def)*m_level/100+5;
-    m_currentStatus.spatk=(m_racialValue.spatk*2+m_individualValue.spatk)*m_level/100+5;
-    m_currentStatus.spdef=(m_racialValue.spdef*2+m_individualValue.spdef)*m_level/100+5;
-    m_currentStatus.speed=(m_racialValue.speed*2+m_individualValue.speed)*m_level/100+5;
+    m_atk_level = 2;                //当前属性等级（2级为100%）
+    m_def_level = 2;
+    m_spatk_level= 2;
+    m_spdef_level = 2;
+    m_speed_level= 2;
 }
 
-void Pokemon::changeStatus(QByteArray status)
+void Pokemon::changeStatus(QVector<int> status)
 {
     if(status.size()<5)
         return;
-    qDebug()<<currentStatus().atk<<currentStatus().def<<currentStatus().spatk<<currentStatus().spdef<<currentStatus().speed;
-    changeStatus(status.at(0),m_currentStatus.atk);
-    changeStatus(status.at(1),m_currentStatus.def);
-    changeStatus(status.at(2),m_currentStatus.spatk);
-    changeStatus(status.at(3),m_currentStatus.spdef);
-    changeStatus(status.at(4),m_currentStatus.speed);
-    qDebug()<<currentStatus().atk<<currentStatus().def<<currentStatus().spatk<<currentStatus().spdef<<currentStatus().speed;
+    qDebug()<<currentAtk()<<currentDef()<<currentSpatk()<<currentSpdef()<<currentSpeed();
+    changeStatus(m_atk_level,status.at(0));
+    changeStatus(m_def_level,status.at(1));
+    changeStatus(m_spatk_level,status.at(2));
+    changeStatus(m_spdef_level,status.at(3));
+    changeStatus(m_speed_level,status.at(4));
+
+    qDebug()<<currentAtk()<<currentDef()<<currentSpatk()<<currentSpdef()<<currentSpeed();
 }
 
-void Pokemon::changeStatus(char status, int& valueToChange)
+void Pokemon::changeStatus(int& valueToChange,int status)
 {
-    if(status=='0')
+    if(status == 0)
         return;
 
-    double coefficient=1.1;
-    if(status & DEBUFF)
-        coefficient=0.9;
-    status |= !DEBUFF;
-    for(auto i=0; i < status - '0'; i++)
-    {
-        valueToChange*=coefficient;
-    }
+    valueToChange += status;
 
+    if(valueToChange > 6)
+        valueToChange = 6;
+    else if(valueToChange < -6)
+        valueToChange = -6;
+}
+
+double Pokemon::statusCoefficient(int statusLevel)
+{
+    switch(statusLevel)
+    {
+    case -6:
+        return 2.0 / 8;     //  -6级25%
+    case -5:
+        return 2.0 / 7;
+    case -4:
+        return 2.0 / 6;
+    case -3:
+        return 2.0 / 5;
+    case -2:
+        return 2.0 / 4;
+    case -1:
+        return 2.0 / 3;
+    case 0:
+        return 2.0 / 2;
+    case 1:
+        return 3.0 / 2;
+    case 2:
+        return 4.0 / 2;
+    case 3:
+        return 5.0 / 2;
+    case 4:
+        return 6.0 / 2;
+    case 5:
+        return 7.0 / 2;
+    case 6:
+        return 8.0 / 2;     //  6级400%
+
+    }
 }

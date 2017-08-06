@@ -29,8 +29,8 @@ void MainInfo::setInfo(PokemonPtr pokemon)
 
     ui->lblName->setText(m_pokemon->name());
     ui->lblLv->setText(QString::number(m_pokemon->level()));
-    ui->lblHp->setText(QString("%1/%2").arg(QString::number(m_pokemon->currentStatus().hp)).arg(QString::number(m_pokemon->hpMax())));
-    ui->progressBar_hp->setValue(m_pokemon->currentStatus().hp * 100 / m_pokemon->hpMax());
+    ui->lblHp->setText(QString("%1/%2").arg(QString::number(m_pokemon->currentHp())).arg(QString::number(m_pokemon->hpMax())));
+    ui->progressBar_hp->setValue(m_pokemon->currentHp() * 100 / m_pokemon->hpMax());
 
     auto attribute= m_pokemon->attribute();
     switch (attribute.size()) {
@@ -50,12 +50,12 @@ void MainInfo::setInfo(PokemonPtr pokemon)
 
 void MainInfo::changePokemon(PokemonPtr pokemon)
 {
-    m_pokemon->reCalculateCurrentState();
+    m_pokemon->resetStatus();
     setInfo(pokemon);
 }
 
 void MainInfo::refreshHp()
 {
-    ui->lblHp->setText(QString("%1/%2").arg(QString::number(m_pokemon->currentStatus().hp)).arg(QString::number(m_pokemon->hpMax())));
-    ui->progressBar_hp->setValue(m_pokemon->currentStatus().hp * 100 / m_pokemon->hpMax());
+    ui->lblHp->setText(QString("%1/%2").arg(QString::number(m_pokemon->currentHp())).arg(QString::number(m_pokemon->hpMax())));
+    ui->progressBar_hp->setValue(m_pokemon->currentHp() * 100 / m_pokemon->hpMax());
 }
