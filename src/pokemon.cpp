@@ -42,7 +42,7 @@ AbstractPokemon::AbstractPokemon(int id)
     if(db.open())
     {
         QSqlQuery query;
-        query.prepare("SELECT * from Pokemon where id=:id");
+        query.prepare("SELECT pmid,name,hp,atk,def,spatk,spdef,speed,type1,type2 from Pokemon where pmid=:id");
         query.bindValue(":id",id);
         query.exec();
         while (query.next()){                       //存在记录
@@ -173,6 +173,8 @@ double Pokemon::statusCoefficient(int statusLevel)
         return 7.0 / 2;
     case 6:
         return 8.0 / 2;     //  6级400%
-
+    default:
+        return 0;
     }
+    return 0;
 }
