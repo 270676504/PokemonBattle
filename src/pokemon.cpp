@@ -6,6 +6,7 @@
 #include <QTime>
 #include "skill.h"
 #define POWER_UP_MAX_COUNT 5
+# define POKEMON_DB_PATH "D:\\pokedex2.db"
 const QVector<QString> AbstractPokemon::word_attribute={u8"无",       //0
                                                    u8"普",       //1
                                                    u8"火",       //2
@@ -29,42 +30,79 @@ const QVector<QString> AbstractPokemon::word_attribute={u8"无",       //0
 AbstractPokemon::AbstractPokemon(int id)
     :m_id(id)
 {
-    QString dbFile("D:\\pokedex2.db");
     QSqlDatabase db;
-
     if(QSqlDatabase::contains("qt_sql_default_connection")){
         db = QSqlDatabase::database("qt_sql_default_connection");
     }else{
         db = QSqlDatabase::addDatabase("QSQLITE");
     }
-    db.setDatabaseName(dbFile);
+    db.setDatabaseName(QString(POKEMON_DB_PATH));
 
-    if(db.open())
+    if(!db.open())
     {
-        QSqlQuery query;
-        query.prepare("SELECT pmid,name,hp,atk,def,spatk,spdef,speed,type1,type2 from Pokemon where pmid=:id");
-        query.bindValue(":id",id);
-        query.exec();
-        while (query.next()){                       //存在记录
-            m_name= query.value(1).toString();
-            m_racialValue.hp= query.value(2).toInt();
-            m_racialValue.atk= query.value(3).toInt();
-            m_racialValue.def= query.value(4).toInt();
-            m_racialValue.spatk= query.value(5).toInt();
-            m_racialValue.spdef= query.value(6).toInt();
-            m_racialValue.speed= query.value(7).toInt();
-            m_attribute.push_back((AbstractPokemon::Attribute)query.value(8).toInt());
-            int secondary_attribute =query.value(9).toInt();
-            if(secondary_attribute){
-                m_attribute.push_back((AbstractPokemon::Attribute)secondary_attribute);
+        qDebug("error : db open failed!");
+        return;
+    }
+
+    QSqlQuery query;
+    query.prepare("SELECT name,hp,atk,def,spatk,spdef,speed,Attribute1,Attribute2 from Pokemon where pmid=:id");
+    query.bindValue(":id",id);
+    query.exec();
+    while (query.next()){                       //存在记录
+        m_name= query.value(0).toString();
+        m_racialValue.hp= query.value(1).toInt();
+        m_racialValue.atk= query.value(2).toInt();
+        m_racialValue.def= query.value(3).toInt();
+        m_racialValue.spatk= query.value(4).toInt();
+        m_racialValue.spdef= query.value(5).toInt();
+        m_racialValue.speed= query.value(6).toInt();
+        m_attribute.push_back((AbstractPokemon::Attribute)query.value(7).toInt());
+        int secondary_attribute =query.value(8).toInt();
+        if(secondary_attribute){
+            m_attribute.push_back((AbstractPokemon::Attribute)secondary_attribute);
+        }
+    }
+    query.prepare("SELECT sklType,sklName,Value from Pokemon_Skill_Learn where pmid=:id");
+    query.bindValue(":id",id);
+    query.exec();
+
+    while (query.next()){
+        int type = query.value(0).toInt();
+        QString name = query.value(1).toString();
+        int num = query.value(2).toInt();
+        switch(type)
+        {
+        case 1:
+            if(num == -1){
+                not_evolved_skill.push_back(name);
+            }else if(num == 0){
+                basic_skill.push_back(name);
+            }else{
+                lv_skill.insert(num,name);
             }
+            break;
+        case 2:
+            TM_skill.push_back(num);
+            break;
+        case 3:
+            HM_skill.push_back(num);
+            break;
+        case 4:
+            teach_skill.push_back(name);
+            break;
+        case 5:
+            inheritance_skill.push_back(name);
+            break;
+        default:
+            qDebug("error:wrong skillType");
+            break;
         }
     }
     db.close();
 }
 
 Pokemon::Pokemon(int id,int level)
-    :AbstractPokemon(id),m_effortValue({0,0,0,0,0,0}),m_level(level)
+    :AbstractPokemon(id),m_level(level)
 {
     qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
     m_individualValue.hp = qrand()%32;
@@ -76,6 +114,8 @@ Pokemon::Pokemon(int id,int level)
 
     m_currentHp=( m_racialValue.hp*2+ m_individualValue.hp)*m_level/100+10+m_level;
     m_hpMax=(m_racialValue.hp*2+m_individualValue.hp)*m_level/100+10+m_level;
+
+    firstLearnSkill();
 }
 
 Pokemon::~Pokemon()
@@ -100,7 +140,6 @@ void Pokemon::learnSkill(SkillPtr skill)
 
 void Pokemon::useSkill(int index, PokemonPtr target)
 {
-    qDebug()<<learnedSkill.size();
     if(index >= learnedSkill.size())
         return;
     const SkillPtr& skill = learnedSkill.at(index);
@@ -177,4 +216,53 @@ double Pokemon::statusCoefficient(int statusLevel)
         return 0;
     }
     return 0;
+}
+
+void Pokemon::firstLearnSkill()
+{
+    QSqlDatabase db;
+    if(QSqlDatabase::contains("qt_sql_default_connection")){
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    }else{
+        db = QSqlDatabase::addDatabase("QSQLITE");
+    }
+    db.setDatabaseName(QString(POKEMON_DB_PATH));
+
+    if(!db.open())
+    {
+        qDebug("error : db open failed!");
+        return;
+    }
+
+    QSqlQuery query;
+    query.prepare("SELECT name,power,accuracy,PP,attribute,Form from skill where name in "
+                  "(SELECT sklName from Pokemon_Skill_Learn where  sklType = 1 AND pmid = :id AND value <= :value)");
+    query.bindValue(":id",m_id);
+    query.bindValue(":value",m_level);
+    query.exec();
+    int i=0;
+    while (query.next()){
+        QString name = query.value(0).toString();
+        int power = query.value(1).toInt();
+        int accuracy = query.value(2).toInt();
+        int PP = query.value(3).toInt();
+        int attribute = query.value(4).toInt();
+        int form = query.value(5).toInt();
+//        if(form != (int)SkillAtkMode::change)
+//        {
+            SkillPtr skill =SkillPtr(new NormalSkill(name,(PokemonAttribute)attribute,(SkillAtkMode)form,power,PP,accuracy));
+            this->learnSkill(skill);
+
+//        }
+            //状态技能还不能直接读取数据。。。。
+//        else
+//        {
+//            //SkillPtr skill =SkillPtr(new NormalSkill("asd",{1,-1,1,1,1},101));
+
+//        }
+        i++;
+        if(i>=4)
+            break;
+    }
+    db.close();
 }

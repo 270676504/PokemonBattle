@@ -6,6 +6,8 @@
 #include <QVector>
 #include <QEnableSharedFromThis>
 #include <QByteArray>
+#include <QMap>
+#include <QStringList>
 class AbstractSkill;
 typedef QSharedPointer<AbstractSkill> SkillPtr;
 
@@ -63,6 +65,15 @@ protected:
     QString m_name;                                     //名字
     Stature m_racialValue;                              //种族值
     QVector<AbstractPokemon::Attribute> m_attribute;    //属性
+
+    //技能相关
+    QStringList not_evolved_skill;  //未进化的时候才能学习
+    QStringList basic_skill;        //早就学会的技能
+    QMap<int,QString> lv_skill;     //升级学习技能
+    QVector<int> TM_skill;          //TM学习机
+    QVector<int> HM_skill;          //HM学习机
+    QStringList teach_skill;        //教学技能
+    QStringList inheritance_skill;  //遗传技能
 };
 
 class Pokemon :public AbstractPokemon , public QEnableSharedFromThis<Pokemon> {
@@ -92,22 +103,24 @@ public:
 protected:
     void changeStatus(int& valueToChange, int status);
     double statusCoefficient(int statusLevel);
+    void firstLearnSkill();
 private:
-    QString m_nickName;             //昵称
-    Stature m_individualValue;      //个体值
-    Stature m_effortValue;          //努力值
-    int m_currentHp;
-    int m_atk_level = 0;                //当前属性等级（2级为100%）
+    QString m_nickName;                         //昵称
+    Stature m_individualValue;                  //个体值
+    Stature m_effortValue = {0,0,0,0,0,0};      //努力值
+
+    int m_atk_level = 0;            //当前属性等级（0级为100%）
     int m_def_level = 0;
     int m_spatk_level= 0;
     int m_spdef_level = 0;
     int m_speed_level= 0;
-    //Stature m_currentStatus;
     int m_level;					//等级
     int m_exp;                      //经验
+    int m_currentHp;
     int m_hpMax;
     int m_character;				//性格
-    QVector<SkillPtr> learnedSkill;
+
+    QVector<SkillPtr> learnedSkill; //已学会技能
 };
 
 typedef AbstractPokemon::Attribute PokemonAttribute;

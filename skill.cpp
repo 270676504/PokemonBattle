@@ -27,8 +27,8 @@ double AbstractSkill::damageCoefficient[20][20]=
 
 
 
-AbstractSkill::AbstractSkill(const QString& name,PokemonAttribute attribute, AtkMode mode, int power)
-    :m_name(name),m_attribute(attribute), m_atkMode(mode),m_power(power)
+AbstractSkill::AbstractSkill(const QString& name, PokemonAttribute attribute, AtkMode mode, int power,int PP, int accuracy)
+    :m_name(name),m_attribute(attribute), m_atkMode(mode),m_accuracy(accuracy),m_power(power),m_ppMax(PP),m_ppCurrent(PP)
 {
 
 }
@@ -39,20 +39,21 @@ AbstractSkill::~AbstractSkill()
 }
 
 
-NormalSkill::NormalSkill(const QString name, PokemonAttribute attribute, AtkMode mode, int power, QVector<int> status,BuffTarget target)
-    :AbstractSkill(name,attribute, mode, power),m_status(status),m_buff_target(target)
+NormalSkill::NormalSkill(const QString name, PokemonAttribute attribute, AtkMode mode, int power,int PP,int accuracy, QVector<int> status,BuffTarget target)
+    :AbstractSkill(name,attribute, mode, power,PP,accuracy),m_status(status),m_buff_target(target)
 {
 
 }
 
-NormalSkill::NormalSkill(const QString name, QVector<int> status,BuffTarget target, PokemonAttribute attribute, AtkMode mode)
-    :AbstractSkill(name,attribute, mode, 0),m_status(status),m_buff_target(target)
+NormalSkill::NormalSkill(const QString name, QVector<int> status,int PP,int accuracy,BuffTarget target, PokemonAttribute attribute, AtkMode mode)
+    :AbstractSkill(name,attribute, mode, 0,PP,accuracy),m_status(status),m_buff_target(target)
 {
 
 }
 
 void NormalSkill::doAction(PokemonPtr self, PokemonPtr target)
 {
+    qDebug()<< m_power;
     //伤害计算
     if(m_power)
     {
@@ -62,14 +63,12 @@ void NormalSkill::doAction(PokemonPtr self, PokemonPtr target)
         //伤害值＝[(攻击方的LV×0.4＋2)×技巧威力×攻击方的攻击（或特攻）能力值÷防御方的防御（或特防）能力值÷50＋2]×各类修正×(217～255之间)÷255
         switch (m_atkMode) {
         case physical:
-            ret = m_power * ((self->level() * 0.4 + 2) *                                    //基础伤害
-                   self->currentAtk() / target->currentDef() / 50+2) *        //攻防
-                    (qrand() % 39+217)/255;                                                 //伤害浮动（217~255）/255
+            ret = (m_power * ((self->level() * 0.4 + 2) * self->currentAtk() / target->currentDef()) / 50.0 + 2)
+                    * (qrand() % 39+217)/255;                                                 //伤害浮动（217~255）/255
             break;
         case special:
-            ret = m_power * ((self->level() * 0.4 + 2) *
-                   self->currentSpatk() / target->currentSpdef() / 50 + 2) *
-                    (qrand() % 39 + 217) / 255;
+            ret = (m_power * ((self->level() * 0.4 + 2) * self->currentSpatk() / target->currentSpdef()) / 50.0 + 2)
+                    * (qrand() % 39 + 217) / 255;
             break;
         default:
             break;
