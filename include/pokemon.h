@@ -103,7 +103,7 @@ public:
 protected:
     void changeStatus(int& valueToChange, int status);
     double statusCoefficient(int statusLevel);
-    void firstLearnSkill();
+    //void firstLearnSkill();
 private:
     QString m_nickName;                         //昵称
     Stature m_individualValue;                  //个体值

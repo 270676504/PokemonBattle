@@ -71,13 +71,17 @@ void BattleScene::setupUi()
        oppo_info->refreshHp();
     });
     connect(btn2,&GraphicsButton::pressed,this,[=](){
-        PokemonPtr poke=PokemonPtr(new Pokemon(13));
-        changePokemon(poke);
+        m_pokemon->useSkill(1,oppo_pokemon);
+        oppo_info->refreshHp();
     });
 
     connect(btn3,&GraphicsButton::pressed,this,[=](){
+        m_pokemon->useSkill(2,oppo_pokemon);
+        oppo_info->refreshHp();
+    });
 
-
-
+    connect(btn3,&GraphicsButton::pressed,this,[=](){
+        m_pokemon->useSkill(3,oppo_pokemon);
+        oppo_info->refreshHp();
     });
 }

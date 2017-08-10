@@ -6,7 +6,7 @@
 #include <QTime>
 #include "skill.h"
 #define POWER_UP_MAX_COUNT 5
-# define POKEMON_DB_PATH "D:\\pokedex2.db"
+
 const QVector<QString> AbstractPokemon::word_attribute={u8"无",       //0
                                                    u8"普",       //1
                                                    u8"火",       //2
@@ -114,8 +114,6 @@ Pokemon::Pokemon(int id,int level)
 
     m_currentHp=( m_racialValue.hp*2+ m_individualValue.hp)*m_level/100+10+m_level;
     m_hpMax=(m_racialValue.hp*2+m_individualValue.hp)*m_level/100+10+m_level;
-
-    firstLearnSkill();
 }
 
 Pokemon::~Pokemon()
@@ -216,53 +214,4 @@ double Pokemon::statusCoefficient(int statusLevel)
         return 0;
     }
     return 0;
-}
-
-void Pokemon::firstLearnSkill()
-{
-    QSqlDatabase db;
-    if(QSqlDatabase::contains("qt_sql_default_connection")){
-        db = QSqlDatabase::database("qt_sql_default_connection");
-    }else{
-        db = QSqlDatabase::addDatabase("QSQLITE");
-    }
-    db.setDatabaseName(QString(POKEMON_DB_PATH));
-
-    if(!db.open())
-    {
-        qDebug("error : db open failed!");
-        return;
-    }
-
-    QSqlQuery query;
-    query.prepare("SELECT name,power,accuracy,PP,attribute,Form from skill where name in "
-                  "(SELECT sklName from Pokemon_Skill_Learn where  sklType = 1 AND pmid = :id AND value <= :value)");
-    query.bindValue(":id",m_id);
-    query.bindValue(":value",m_level);
-    query.exec();
-    int i=0;
-    while (query.next()){
-        QString name = query.value(0).toString();
-        int power = query.value(1).toInt();
-        int accuracy = query.value(2).toInt();
-        int PP = query.value(3).toInt();
-        int attribute = query.value(4).toInt();
-        int form = query.value(5).toInt();
-//        if(form != (int)SkillAtkMode::change)
-//        {
-            SkillPtr skill =SkillPtr(new NormalSkill(name,(PokemonAttribute)attribute,(SkillAtkMode)form,power,PP,accuracy));
-            this->learnSkill(skill);
-
-//        }
-            //状态技能还不能直接读取数据。。。。
-//        else
-//        {
-//            //SkillPtr skill =SkillPtr(new NormalSkill("asd",{1,-1,1,1,1},101));
-
-//        }
-        i++;
-        if(i>=4)
-            break;
-    }
-    db.close();
 }

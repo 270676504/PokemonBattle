@@ -35,7 +35,7 @@ PokemonPtr Player::getFirstPokemon()
         }
     }
     qDebug("error: no pokemon can use");
-    return nullptr;
+    return PokemonPtr(nullptr);
 }
 
 void Player::easyViewTeam()

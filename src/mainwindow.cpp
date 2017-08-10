@@ -56,9 +56,9 @@ void MainWindow::on_pushButton_clicked()
 {
     int id = ui->lineEdit->text().toInt();
     PokemonPtr poke= PokemonPtr(new Pokemon(id));
+    AbstractSkill::firstLearnSkill(poke);
     player->addPokemonToTeam(poke);
-    SkillPtr skill =SkillPtr(new NormalSkill("asd",{1,-1,1,1,1},35,101));
-    player->learnSkill(0,skill);
+
 }
 
 void MainWindow::on_btnBack_clicked()
@@ -81,8 +81,8 @@ void MainWindow::on_btnAddSkill_clicked()
         mode=SkillAtkMode::physical;
     else
         mode=SkillAtkMode::special;
-    SkillPtr skill =SkillPtr(new NormalSkill(name,PokemonAttribute::water,mode,power,35,100));
-    player->learnSkill(index,skill);
+    //SkillPtr skill =SkillPtr(new NormalSkill(name,PokemonAttribute::water,mode,power,35,100));
+    //player->learnSkill(index,skill);
 }
 
 void MainWindow::on_pushButton_4_clicked()
