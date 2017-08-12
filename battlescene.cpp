@@ -80,7 +80,7 @@ void BattleScene::setupUi()
         oppo_info->refreshHp();
     });
 
-    connect(btn3,&GraphicsButton::pressed,this,[=](){
+    connect(btn4,&GraphicsButton::pressed,this,[=](){
         m_pokemon->useSkill(3,oppo_pokemon);
         oppo_info->refreshHp();
     });

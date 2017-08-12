@@ -8,8 +8,8 @@
 #include <QByteArray>
 #include <QMap>
 #include <QStringList>
-class AbstractSkill;
-typedef QSharedPointer<AbstractSkill> SkillPtr;
+class Skill;
+typedef QSharedPointer<Skill> SkillPtr;
 
 class Pokemon;
 typedef QSharedPointer<Pokemon> PokemonPtr;
@@ -46,13 +46,14 @@ public:
         fairy           //妖
     };
     enum PowerUpStatus{
-        NONE = 0, //说明：如果想提升2档atk，只需要传入ATK*2就行了
-        ATK = 1 << 0,
-        DEF = 1 << 5,
-        SPATK = 1 << 10,
-        SPDEF = 1 << 15,
-        SPEED = 1 << 20,
-        DEBUFF = 1<< 31, //if this value set 1 ,it means debuff
+        NONE ,
+        ATK ,
+        DEF ,
+        SPATK ,
+        SPDEF ,
+        SPEED ,
+        ACCURACY,
+        DODGE,
     };
     static const QVector<QString> word_attribute;
     explicit AbstractPokemon(int m_id);
@@ -90,18 +91,21 @@ public:
     int currentSpatk(){return ((m_racialValue.spatk*2+m_individualValue.spatk)*m_level/100+5) * statusCoefficient(m_spatk_level);}
     int currentSpdef(){return ((m_racialValue.spdef*2+m_individualValue.spdef)*m_level/100+5) * statusCoefficient(m_spdef_level);}
     int currentSpeed(){return ((m_racialValue.speed*2+m_individualValue.speed)*m_level/100+5) * statusCoefficient(m_speed_level);}
+
+
+
     int level(){return m_level;}
     int exp(){return m_exp;}
     int hpMax(){return m_hpMax;}
 
     void hpReduce(int value);
-    void learnSkill(SkillPtr skill);
+    bool learnSkill(SkillPtr skill);
     void useSkill(int index, PokemonPtr target);
     void resetStatus();
-    void changeStatus(QVector<int> status);
-
+    void changeStatus(int value,PowerUpStatus stauts);
+    void checkStatus(int& status);
 protected:
-    void changeStatus(int& valueToChange, int status);
+//    void changeStatus(int& valueToChange, int status);
     double statusCoefficient(int statusLevel);
     //void firstLearnSkill();
 private:
@@ -114,10 +118,12 @@ private:
     int m_spatk_level= 0;
     int m_spdef_level = 0;
     int m_speed_level= 0;
+    int m_accuracy_level=0;         //命中提升等级
+    int m_dodge_level=0;            //闪避提升等级
     int m_level;					//等级
     int m_exp;                      //经验
-    int m_currentHp;
-    int m_hpMax;
+    int m_currentHp;                //当前PP
+    int m_hpMax;                    //最大PP
     int m_character;				//性格
 
     QVector<SkillPtr> learnedSkill; //已学会技能

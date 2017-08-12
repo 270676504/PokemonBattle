@@ -130,10 +130,13 @@ void Pokemon::hpReduce(int value)
     }
 }
 
-void Pokemon::learnSkill(SkillPtr skill)
+bool Pokemon::learnSkill(SkillPtr skill)
 {
-    if(learnedSkill.size() < 4)
-        learnedSkill.push_back(skill); //先偷个懒，后面还有
+    if(learnedSkill.size() >= 4)
+        return false;
+
+    learnedSkill.push_back(skill); //先偷个懒，后面还有
+    return true;
 }
 
 void Pokemon::useSkill(int index, PokemonPtr target)
@@ -153,32 +156,67 @@ void Pokemon::resetStatus()
     m_speed_level= 2;
 }
 
-void Pokemon::changeStatus(QVector<int> status)
+void Pokemon::changeStatus(int value, PowerUpStatus stauts)
 {
-    if(status.size()<5)
+    qDebug()<<"buff value"<<value<<stauts;
+    if(!value)
         return;
-    qDebug()<<currentAtk()<<currentDef()<<currentSpatk()<<currentSpdef()<<currentSpeed();
-    changeStatus(m_atk_level,status.at(0));
-    changeStatus(m_def_level,status.at(1));
-    changeStatus(m_spatk_level,status.at(2));
-    changeStatus(m_spdef_level,status.at(3));
-    changeStatus(m_speed_level,status.at(4));
-
-    qDebug()<<currentAtk()<<currentDef()<<currentSpatk()<<currentSpdef()<<currentSpeed();
+    qDebug()<<currentAtk()<<currentDef()<<currentSpatk()<<currentSpdef()<<currentSpeed()<<m_accuracy_level<<m_dodge_level;
+    switch (stauts) {
+    case PowerUpStatus::ATK:
+        m_atk_level += value;
+        checkStatus(m_atk_level);
+        break;
+    case PowerUpStatus::DEF:
+        m_def_level += value;
+        checkStatus(m_def_level);
+        break;
+    case PowerUpStatus::SPATK:
+        m_spatk_level += value;
+        checkStatus(m_spatk_level);
+        break;
+    case PowerUpStatus::SPDEF:
+        m_spdef_level += value;
+        checkStatus(m_spdef_level);
+        break;
+    case PowerUpStatus::SPEED:
+        m_speed_level += value;
+        checkStatus(m_speed_level);
+        break;
+    case PowerUpStatus::ACCURACY:
+        m_accuracy_level += value;
+        checkStatus(m_accuracy_level);
+        break;
+    case PowerUpStatus::DODGE:
+        m_dodge_level += value;
+        checkStatus(m_dodge_level);
+        break;
+    default:
+        break;
+    }
+    qDebug()<<currentAtk()<<currentDef()<<currentSpatk()<<currentSpdef()<<currentSpeed()<<m_accuracy_level<<m_dodge_level;
 }
 
-void Pokemon::changeStatus(int& valueToChange,int status)
+void Pokemon::checkStatus(int &status)
 {
-    if(status == 0)
-        return;
-
-    valueToChange += status;
-
-    if(valueToChange > 6)
-        valueToChange = 6;
-    else if(valueToChange < -6)
-        valueToChange = -6;
+    if(status>6)
+        status=6;
+    if(status<-6)
+        status=-6;
 }
+
+//void Pokemon::changeStatus(int& valueToChange,int status)
+//{
+//    if(status == 0)
+//        return;
+
+//    valueToChange += status;
+
+//    if(valueToChange > 6)
+//        valueToChange = 6;
+//    else if(valueToChange < -6)
+//        valueToChange = -6;
+//}
 
 double Pokemon::statusCoefficient(int statusLevel)
 {

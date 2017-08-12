@@ -56,7 +56,7 @@ void MainWindow::on_pushButton_clicked()
 {
     int id = ui->lineEdit->text().toInt();
     PokemonPtr poke= PokemonPtr(new Pokemon(id));
-    AbstractSkill::firstLearnSkill(poke);
+    Skill::firstLearnSkill(poke);
     player->addPokemonToTeam(poke);
 
 }

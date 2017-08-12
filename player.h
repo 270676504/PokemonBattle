@@ -6,8 +6,8 @@
 class Pokemon;
 typedef QSharedPointer<Pokemon> PokemonPtr;
 
-class AbstractSkill;
-typedef QSharedPointer<AbstractSkill> SkillPtr;
+class Skill;
+typedef QSharedPointer<Skill> SkillPtr;
 class Player
 {
 public:

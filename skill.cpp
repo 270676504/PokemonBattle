@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QSqlDatabase>
 #include <QSqlQuery>
-double AbstractSkill::damageCoefficient[20][20]=
+double Skill::damageCoefficient[20][20]=
             //无, 普, 火,  水, 草, 电, 冰, 虫,  飞, 地, 岩, 格,  超, 鬼, 毒,  恶, 钢, 龙, 妖,无
             {{0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18,0}, //无
              {1,  1,  1,  1,  1,  1,  1,  1,  1,  1,0.5,  1,  1,  0,  1,  1,0.5,  1,  1,0}, //普
@@ -27,24 +27,8 @@ double AbstractSkill::damageCoefficient[20][20]=
              {0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,0}};
 
 
-
-//AbstractSkill::AbstractSkill(const QString &name)
-//{
-
-//}
-
-AbstractSkill::AbstractSkill(const QString& name, PokemonAttribute attribute, AtkMode mode, int power,int PP, int accuracy)
-    :m_name(name),m_attribute(attribute), m_atkMode(mode),m_accuracy(accuracy),m_power(power),m_ppMax(PP),m_ppCurrent(PP)
-{
-    m_isVaild = true;
-}
-
-AbstractSkill::~AbstractSkill()
-{
-
-}
-
-void AbstractSkill::firstLearnSkill(PokemonPtr pokemon)
+Skill::Skill(const QString &name)
+    :m_name(name)
 {
     QSqlDatabase db;
     if(QSqlDatabase::contains("qt_sql_default_connection")){
@@ -56,52 +40,186 @@ void AbstractSkill::firstLearnSkill(PokemonPtr pokemon)
 
     if(!db.open())
     {
-        qDebug("error : db open failed!");
+        qDebug("error:db open failed!(_Skill::Skill(const QString &name)_)");
         return;
     }
 
     QSqlQuery query;
-    query.prepare("SELECT name,power,accuracy,PP,attribute,Form,buff_value,effect1,effect2,effect3,effect4,effect5 from skill where name in "
-                  "(SELECT sklName from Pokemon_Skill_Learn where  sklType = 1 AND pmid = :id AND value <= :value)");
-    query.bindValue(":id",pokemon->id());
-    query.bindValue(":value",pokemon->level());
+    query.prepare("SELECT power,accuracy,PP,attribute,Form,buff_value,effect1,effect2,effect3,effect4,effect5 from skill where name = :name ");
+    query.bindValue(":name",name);
     query.exec();
-    int i=0;
-    while (query.next()){
-        QString name = query.value(0).toString();
-        int power = query.value(1).toInt();
-        int accuracy = query.value(2).toInt();
-        int PP = query.value(3).toInt();
-        PokemonAttribute attribute = (PokemonAttribute)query.value(4).toInt();
-        SkillAtkMode form = (SkillAtkMode)query.value(5).toInt();
-        int buff_value= query.value(6).toInt();
-        int count =7;
-        QVector<int> effects;
+    if (query.next()){
+        m_power = query.value(0).toInt();
+        m_accuracy = query.value(1).toInt();
+        m_ppMax= query.value(2).toInt();
+        m_ppCurrent=m_ppMax;
+        m_attribute = (PokemonAttribute)query.value(3).toInt();
+        m_atkMode = (SkillAtkMode)query.value(4).toInt();
+        m_status= query.value(5).toInt();
+        qDebug()<<m_name;
+        qDebug()<<m_status;
+        int count =6;
         while(1)
         {
             int effect = query.value(count++).toInt();
             if(effect==0)
                 break;
             effects.push_back(effect);
-
         }
-        if(effects.isEmpty())
-        {//无特效技能，攻击技能和buff技能
-            SkillPtr skill =SkillPtr(new NormalSkill(name,attribute,form,power,PP,accuracy,buff_value));
-            pokemon->learnSkill(skill);
-        }
-        else
-        {//有特效的技能
-
-        }
-        i++;
-        if(i>=4)
-            break;
+        m_isVaild = true;
     }
+
     db.close();
 }
 
-SkillPtr AbstractSkill::getSkill(QString name)
+Skill::~Skill()
+{
+
+}
+
+void Skill::doAction(PokemonPtr self, PokemonPtr target)
+{
+    //伤害计算
+    if(m_power)
+    {
+      makeDamage(self,target);
+    }
+    if(m_status)
+    {
+        statusChange(self,target);
+    }
+
+
+}
+
+void Skill::makeDamage(PokemonPtr self, PokemonPtr target)
+{
+    double ret = 1;
+    double power_coefficient = 1;
+    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+    //伤害值＝[(攻击方的LV×0.4＋2)×技巧威力×攻击方的攻击（或特攻）能力值÷防御方的防御（或特防）能力值÷50＋2]×各类修正×(217～255之间)÷255
+    switch (m_atkMode) {
+    case physical:
+        ret = (m_power * ((self->level() * 0.4 + 2) * self->currentAtk() / target->currentDef()) / 50.0 + 2)
+                * (qrand() % 39+217)/255;                                                 //伤害浮动（217~255）/255
+        break;
+    case special:
+        ret = (m_power * ((self->level() * 0.4 + 2) * self->currentSpatk() / target->currentSpdef()) / 50.0 + 2)
+                * (qrand() % 39 + 217) / 255;
+        break;
+    default:
+        break;
+    }
+    for(auto attribute : target->attribute())
+    {
+         power_coefficient*=damageCoefficient[m_attribute][attribute];
+    }
+    for(auto attribute : self->attribute())
+    {
+        if(attribute==m_attribute)
+        {
+             power_coefficient *= 1.5;
+             break;
+        }
+    }
+    ret *= power_coefficient;
+    target->hpReduce((int)ret);
+}
+
+void Skill::statusChange(PokemonPtr self, PokemonPtr target)
+{
+    //状态提升,换算法
+    int back = m_status;
+    for(int i = 0; back != 0 ;i++)
+    {
+        int judge = back % 16;
+        back = back / 16 ;
+        if(!judge)
+        {
+            continue;
+        }
+
+        PokemonStatus status = PokemonStatus::NONE;
+        switch (i) {
+        case 0:
+            status =PokemonStatus::DODGE;
+            break;
+        case 1:
+            status =PokemonStatus::ACCURACY;
+            break;
+        case 2:
+            status =PokemonStatus::SPEED;
+            break;
+        case 3:
+            status =PokemonStatus::SPDEF;
+            break;
+        case 4:
+            status =PokemonStatus::SPATK;
+            break;
+        case 5:
+            status =PokemonStatus::DEF;
+            break;
+        case 6:
+            status =PokemonStatus::ATK;
+            break;
+        default:
+            break;
+        }
+
+        PokemonPtr buffTarget = self;
+        int buffValue = 0;
+        switch (judge) {
+        case 1:
+            buffValue = 1;
+            break;
+        case 2:
+            buffValue = 2;
+            break;
+        case 3:
+            buffValue = 3;
+            break;
+        case 5:
+            buffValue = -1;
+            break;
+        case 6:
+            buffValue = -2;
+            break;
+        case 7:
+            buffValue = -3;
+            break;
+        case 9:
+            buffTarget = target;
+            buffValue = 1;
+            break;
+        case 10:
+            buffTarget = target;
+            buffValue = 2;
+            break;
+        case 11:
+            buffTarget = target;
+            buffValue = 3;
+            break;
+        case 13:
+            buffTarget = target;
+            buffValue = -1;
+            break;
+        case 14:
+            buffTarget = target;
+            buffValue = -2;
+            break;
+        case 15:
+            buffTarget = target;
+            buffValue = -3;
+            break;
+        default:
+            break;
+        }
+
+        buffTarget->changeStatus(buffValue,status);
+    }
+}
+
+void Skill::firstLearnSkill(PokemonPtr pokemon)
 {
     QSqlDatabase db;
     if(QSqlDatabase::contains("qt_sql_default_connection")){
@@ -113,117 +231,27 @@ SkillPtr AbstractSkill::getSkill(QString name)
 
     if(!db.open())
     {
-        qDebug("errPokemonAttributeled!");
-        return SkillPtr(nullptr);
+        qDebug("error : db open failed! _Skill::firstLearnSkill(PokemonPtr pokemon)_");
+        return;
     }
 
     QSqlQuery query;
-    query.prepare("SELECT power,accuracy,PP,attribute,Form,buff_value,effPokemonAttributeect3,effect4,effect5 from skill where name = :name ");
-    query.bindValue(":name",name);
+    query.prepare("SELECT sklName from Pokemon_Skill_Learn where  sklType = 1 AND pmid = :id AND value <= :value");
+    query.bindValue(":id",pokemon->id());
+    query.bindValue(":value",pokemon->level());
     query.exec();
+    QStringList nameList;
     while (query.next()){
-        int power = query.value(0).toInt();
-        int accuracy = query.value(1).toInt();
-        int PP = query.value(2).toInt();
-        PokemonAttribute attribute = (PokemonAttribute)query.value(3).toInt();
-        SkillAtkMode form = (SkillAtkMode)query.value(4).toInt();
-        int buff_value= query.value(5).toInt();
-        int count =6;
-        QVector<int> effects;
-        while(1)
-        {
-            int effect = query.value(count++).toInt();
-            if(effect==0)
-                break;
-            effects.push_back(effect);
-
-        }
-        if(effects.isEmpty())
-        {//无特效技能，攻击技能和buff技能
-            SkillPtr skill =SkillPtr(new NormalSkill(name,attribute,form,power,PP,accuracy,buff_value));
-            return skill;
-        }
-        else
-        {//有特效的技能
-
-        }
-
+        QString name = query.value(0).toString();
+        nameList << name;
     }
     db.close();
-    return SkillPtr(nullptr);
-}
 
-
-//NormalSkill::NormalSkill(const QString name)
-//    :AbstractSkill(name)
-//{
-
-//}
-
-NormalSkill::NormalSkill(QString name, PokemonAttribute attribute, AtkMode mode, int power,int PP,int accuracy, int status)
-    :AbstractSkill(name,attribute, mode, power,PP,accuracy),m_status(status)
-{
-
-}
-
-//NormalSkill::NormalSkill(QString name, int status,int PP,int accuracy,PokemonAttribute attribute, AtkMode mode)
-//    :AbstractSkill(name,attribute, mode, 0,PP,accuracy),m_status(status)
-//{
-
-//}
-
-void NormalSkill::doAction(PokemonPtr self, PokemonPtr target)
-{
-    //伤害计算
-    if(m_power)
+    for(auto name : nameList)
     {
-        double ret = 1;
-        double power_coefficient = 1;
-        qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
-        //伤害值＝[(攻击方的LV×0.4＋2)×技巧威力×攻击方的攻击（或特攻）能力值÷防御方的防御（或特防）能力值÷50＋2]×各类修正×(217～255之间)÷255
-        switch (m_atkMode) {
-        case physical:
-            ret = (m_power * ((self->level() * 0.4 + 2) * self->currentAtk() / target->currentDef()) / 50.0 + 2)
-                    * (qrand() % 39+217)/255;                                                 //伤害浮动（217~255）/255
+        SkillPtr skill =SkillPtr(new Skill(name));
+        if(skill->isVaild() && !pokemon->learnSkill(skill))
             break;
-        case special:
-            ret = (m_power * ((self->level() * 0.4 + 2) * self->currentSpatk() / target->currentSpdef()) / 50.0 + 2)
-                    * (qrand() % 39 + 217) / 255;
-            break;
-        default:
-            break;
-        }
-        for(auto attribute : target->attribute())
-        {
-             power_coefficient*=damageCoefficient[m_attribute][attribute];
-        }
-        for(auto attribute : self->attribute())
-        {
-            if(attribute==m_attribute)
-            {
-                 power_coefficient *= 1.5;
-                 break;
-            }
-        }
-        ret *= power_coefficient;
-        target->hpReduce((int)ret);
     }
-
-    //状态提升,换算法
-//    if(!m_status.isEmpty())
-//    {
-//        if(m_buff_target == Self)
-//            self->changeStatus(m_status);
-//        else
-//            target->changeStatus(m_status);
-//    }
 }
-
-NormalSkill::~NormalSkill()
-{
-
-}
-
-
-
 
