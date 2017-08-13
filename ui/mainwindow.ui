@@ -35,6 +35,9 @@
       <property name="styleSheet">
        <string notr="true"/>
       </property>
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
       <widget class="QWidget" name="page_menu">
        <property name="styleSheet">
         <string notr="true">#page_menu{border-image: url(:/image/image/bg.jpg);}</string>

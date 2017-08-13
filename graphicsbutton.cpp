@@ -8,12 +8,12 @@ GraphicsButton::GraphicsButton(QGraphicsItem *parent)
     setCacheMode(DeviceCoordinateCache);
 }
 
-GraphicsButton::GraphicsButton(const QPixmap &pixmap, QGraphicsItem *parent)
-    : QGraphicsWidget(parent), _pix(pixmap)
-{
-    setAcceptHoverEvents(true);
-    setCacheMode(DeviceCoordinateCache);
-}
+//GraphicsButton::GraphicsButton(/*const QPixmap &pixmap,*/ QGraphicsItem *parent)
+//    : QGraphicsWidget(parent), /*_pix(pixmap)*/
+//{
+//    setAcceptHoverEvents(true);
+//    setCacheMode(DeviceCoordinateCache);
+//}
 
 void GraphicsButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *)
 {
@@ -35,6 +35,7 @@ void GraphicsButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
     //painter->drawEllipse(r.adjusted(5, 5, -5, -5));
     if(!_pix.isNull())
         painter->drawPixmap(-_pix.width()/2, -_pix.height()/2, _pix);
+    painter->drawText(QPoint(0, 0),"asd");
 }
 
 QPainterPath GraphicsButton::shape() const
@@ -44,7 +45,7 @@ QPainterPath GraphicsButton::shape() const
     return path;
 }
 
-void GraphicsButton::setPix(const QPixmap &pixmap)
-{
-    _pix=pixmap;
-}
+//void GraphicsButton::setPix(const QPixmap &pixmap)
+//{
+////    _pix=pixmap;
+//}

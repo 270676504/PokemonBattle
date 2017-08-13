@@ -49,10 +49,10 @@ void BattleScene::setupUi()
     QPixmap front(":/image/image/1f.png");
     pix=pix.scaled(90,90);
     int m_width=pix.width()+1;
-    GraphicsButton *btn1 = new GraphicsButton(pix, skillButtonContainer);
-    GraphicsButton *btn2 = new GraphicsButton(pix, skillButtonContainer);
-    GraphicsButton *btn3 = new GraphicsButton(pix, skillButtonContainer);
-    GraphicsButton *btn4 = new GraphicsButton(pix, skillButtonContainer);
+    GraphicsButton *btn1 = new GraphicsButton(/*pix*/ skillButtonContainer);
+    GraphicsButton *btn2 = new GraphicsButton(/*pix,*/ skillButtonContainer);
+    GraphicsButton *btn3 = new GraphicsButton(/*pix,*/ skillButtonContainer);
+    GraphicsButton *btn4 = new GraphicsButton(/*pix,*/ skillButtonContainer);
     btn1->setPos(0-m_width*1.5, 0);
     btn2->setPos(0-m_width/2, 0);
     btn3->setPos(m_width/2, 0);
