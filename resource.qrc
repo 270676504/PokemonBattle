@@ -7,5 +7,6 @@
         <file>image/1b.png</file>
         <file>image/1f.png</file>
         <file>image/bg.jpg</file>
+        <file>image/3.png</file>
     </qresource>
 </RCC>

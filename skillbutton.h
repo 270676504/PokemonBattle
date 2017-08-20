@@ -1,15 +1,14 @@
-﻿#ifndef GRAPHICSBUTTON_H
-#define GRAPHICSBUTTON_H
+#ifndef SKILLBUTTON_H
+#define SKILLBUTTON_H
 #include <QGraphicsWidget>
-
-class GraphicsButton : public QGraphicsWidget
+#include "skill.h"
+class SkillButton : public QGraphicsWidget
 {
-    Q_OBJECT
+     Q_OBJECT
 public:
-    GraphicsButton(QGraphicsItem *parent = 0);
-//    GraphicsButton(/*const QPixmap &pixmap,*/ QGraphicsItem *parent = 0);
+    SkillButton(SkillPtr skill, QGraphicsItem *parent = 0);
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *) override;
-    QRectF boundingRect() const override{return QRectF(-65, -65, 130, 130);}
+    QRectF boundingRect() const override{return QRectF(-45, -35, 90, 70);}
     QPainterPath shape() const override;
     void setPix(const QPixmap &pixmap);
 signals:
@@ -18,7 +17,9 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *) override{ emit pressed();update(); }
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *) override{ update(); }
 private:
-//    QPixmap _pix;
+    SkillPtr m_skill;
 };
 
-#endif // GRAPHICSBUTTON_H
+
+
+#endif // SKILLBUTTON_H

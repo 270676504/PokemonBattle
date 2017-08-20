@@ -55,7 +55,7 @@ public:
         ACCURACY,
         DODGE,
     };
-    static const QVector<QString> word_attribute;
+    static const QVector<QString> attributeArray;
     explicit AbstractPokemon(int m_id);
     QString name(){return m_name;}
     Stature racialValue(){return m_racialValue;}
@@ -104,10 +104,10 @@ public:
     void resetStatus();
     void changeStatus(int value,PowerUpStatus stauts);
     void checkStatus(int& status);
+    QVector<SkillPtr> skills(){return learnedSkill;}
+
 protected:
-//    void changeStatus(int& valueToChange, int status);
     double statusCoefficient(int statusLevel);
-    //void firstLearnSkill();
 private:
     QString m_nickName;                         //昵称
     Stature m_individualValue;                  //个体值

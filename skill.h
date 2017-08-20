@@ -18,6 +18,10 @@ public:
     void makeDamage(PokemonPtr self,PokemonPtr target);
     void statusChange(PokemonPtr self,PokemonPtr target);
     void statusChange(PokemonPtr self, PokemonPtr target, int value);
+    QString name(){return m_name;}
+    PokemonAttribute attribute(){return m_attribute;}
+    int PPMax(){return m_ppMax;}
+    int PPCurrent(){return m_ppCurrent;}
 public: //static
     static double damageCoefficient[20][20];    //伤害系数
     static void firstLearnSkill(PokemonPtr pokemon);

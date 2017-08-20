@@ -36,7 +36,7 @@
        <string notr="true"/>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page_menu">
        <property name="styleSheet">
@@ -165,6 +165,19 @@
         </property>
         <property name="text">
          <string>返回</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="geometry">
+         <rect>
+          <x>600</x>
+          <y>300</y>
+          <width>75</width>
+          <height>23</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>一键</string>
         </property>
        </widget>
       </widget>

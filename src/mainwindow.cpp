@@ -89,3 +89,22 @@ void MainWindow::on_pushButton_4_clicked()
 {
      ui->stackedWidget->setCurrentWidget(ui->page_add_skil);
 }
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    int id = ui->lineEdit->text().toInt();
+    PokemonPtr poke= PokemonPtr(new Pokemon(id));
+    Skill::firstLearnSkill(poke);
+    player->addPokemonToTeam(poke);
+    if(player->hasTeam())
+    {
+        PokemonPtr poke2= PokemonPtr(new Pokemon(3));
+        ui->stackedWidget->setCurrentWidget(ui->page_battle);
+        BattleScene *scene =new BattleScene (player->getFirstPokemon(),poke2);
+        ui->graphicsView->setScene(scene);
+    }
+    else
+    {
+        qDebug("No team.Can't battle!");
+    }
+}

@@ -35,10 +35,10 @@ void MainInfo::setInfo(PokemonPtr pokemon)
     auto attribute= m_pokemon->attribute();
     switch (attribute.size()) {
     case 1:
-    ui->lblAttribute->setText(QString("%1").arg(AbstractPokemon::word_attribute[attribute[0]]));
+    ui->lblAttribute->setText(QString("%1").arg(AbstractPokemon::attributeArray[attribute[0]]));
         break;
     case 2:
-    ui->lblAttribute->setText(QString("%1,%2").arg(AbstractPokemon::word_attribute[attribute[0]]).arg(AbstractPokemon::word_attribute[attribute[1]]));
+    ui->lblAttribute->setText(QString("%1,%2").arg(AbstractPokemon::attributeArray[attribute[0]]).arg(AbstractPokemon::attributeArray[attribute[1]]));
         break;
     default:
         break;

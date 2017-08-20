@@ -32,7 +32,7 @@ SOURCES += \
     game.cpp \
     maininfo.cpp \
     battlescene.cpp \
-    graphicsbutton.cpp
+    skillbutton.cpp
 
 HEADERS += \
     include/mainwindow.h \
@@ -42,7 +42,7 @@ HEADERS += \
     game.h \
     maininfo.h \
     battlescene.h \
-    graphicsbutton.h
+    skillbutton.h
 
 FORMS += \
     ui/mainwindow.ui \

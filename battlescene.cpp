@@ -1,11 +1,13 @@
-﻿#include "battlescene.h"
-#include "maininfo.h"
-#include <QGraphicsProxyWidget>
-#include "graphicsbutton.h"
-#include <QPixmap>
+﻿#include <QString>
 #include <QDebug>
+#include <QPixmap>
+#include <QGraphicsProxyWidget>
 #include "skill.h"
-#include <QString>
+#include "maininfo.h"
+#include "skillbutton.h"
+#include "battlescene.h"
+
+
 BattleScene::BattleScene(PokemonPtr pokemon1, PokemonPtr pokemon2, QObject *parent)
     :QGraphicsScene(parent),m_pokemon(pokemon1),oppo_pokemon(pokemon2)
 {
@@ -44,44 +46,26 @@ void BattleScene::setupUi()
     skillButtonContainer->setPos(-200, 400);
     skillButtonContainer->setZValue(65);
 
-    QPixmap pix(":/image/image/fire.png");
-    QPixmap back(":/image/image/1b.png");
-    QPixmap front(":/image/image/1f.png");
-    pix=pix.scaled(90,90);
-    int m_width=pix.width()+1;
-    GraphicsButton *btn1 = new GraphicsButton(/*pix*/ skillButtonContainer);
-    GraphicsButton *btn2 = new GraphicsButton(/*pix,*/ skillButtonContainer);
-    GraphicsButton *btn3 = new GraphicsButton(/*pix,*/ skillButtonContainer);
-    GraphicsButton *btn4 = new GraphicsButton(/*pix,*/ skillButtonContainer);
-    btn1->setPos(0-m_width*1.5, 0);
-    btn2->setPos(0-m_width/2, 0);
-    btn3->setPos(m_width/2, 0);
-    btn4->setPos(m_width*1.5, 0);
+    int m_width=95;
+    int startPoint = 0-m_width*1.5;
+    auto skills = m_pokemon->skills();
+    for(auto i=0;i<skills.size();i++)
+    {
+         SkillButton *skillButton = new SkillButton(skills[i],skillButtonContainer);
+         skillButton->setPos(startPoint, 0);
+         startPoint+=m_width;
+         connect(skillButton,&SkillButton::pressed,this,[=](){
+            m_pokemon->useSkill(i,oppo_pokemon);
+            oppo_info->refreshHp();
+         });
+    }
     addItem(skillButtonContainer);
 
     //增加敌我图片
+    QPixmap back(":/image/image/1b.png");
+    QPixmap front(":/image/image/1f.png");
     auto item = addPixmap(back);
-    item->setPos(-300-pix.width()/2, 100-pix.height()/2);
-
+    item->setPos(-300-m_width/2, 100-m_width/2);
     item = addPixmap(front);
-    item->setPos(200-pix.width()/2, -300+pix.height()/2);
-
-    connect(btn1,&GraphicsButton::pressed,this,[=](){
-       m_pokemon->useSkill(0,oppo_pokemon);
-       oppo_info->refreshHp();
-    });
-    connect(btn2,&GraphicsButton::pressed,this,[=](){
-        m_pokemon->useSkill(1,oppo_pokemon);
-        oppo_info->refreshHp();
-    });
-
-    connect(btn3,&GraphicsButton::pressed,this,[=](){
-        m_pokemon->useSkill(2,oppo_pokemon);
-        oppo_info->refreshHp();
-    });
-
-    connect(btn4,&GraphicsButton::pressed,this,[=](){
-        m_pokemon->useSkill(3,oppo_pokemon);
-        oppo_info->refreshHp();
-    });
+    item->setPos(200-m_width/2, -300+m_width/2);
 }

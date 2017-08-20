@@ -7,7 +7,7 @@
 #include "skill.h"
 #define POWER_UP_MAX_COUNT 5
 
-const QVector<QString> AbstractPokemon::word_attribute={u8"无",       //0
+const QVector<QString> AbstractPokemon::attributeArray={u8"无",       //0
                                                    u8"普",       //1
                                                    u8"火",       //2
                                                    u8"水",       //3
