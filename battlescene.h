@@ -13,12 +13,16 @@ class BattleScene : public QGraphicsScene
     enum Person{
         Self,Oppo
     };
+    enum Face{
+        Front,Back
+    };
 public:
     BattleScene(PokemonPtr pokemon1,PokemonPtr pokemon2,QObject *parent = Q_NULLPTR);
     ~BattleScene();
     void changePokemon(PokemonPtr pokemon,Person target = Self );
 protected:
     void setupUi();
+    QString getGifPath(Face face,int id);
 private:
     PokemonPtr m_pokemon;
     PokemonPtr oppo_pokemon;

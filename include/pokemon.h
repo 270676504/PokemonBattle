@@ -93,7 +93,7 @@ public:
     int currentSpeed(){return ((m_racialValue.speed*2+m_individualValue.speed)*m_level/100+5) * statusCoefficient(m_speed_level);}
 
 
-
+    int id(){return m_id;}
     int level(){return m_level;}
     int exp(){return m_exp;}
     int hpMax(){return m_hpMax;}

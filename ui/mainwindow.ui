@@ -94,6 +94,23 @@
          <string>测试增加技能</string>
         </property>
        </widget>
+       <widget class="QPushButton" name="pushButton_3">
+        <property name="geometry">
+         <rect>
+          <x>390</x>
+          <y>30</y>
+          <width>251</width>
+          <height>321</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>把pokemon2.db和
+Pokemon_image_source
+文件夹直接放在D盘,
+数据库项目拉出来的，
+文件夹群里下载了之后解压缩</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="page_battle">
        <layout class="QHBoxLayout" name="horizontalLayout_2">

@@ -1,6 +1,8 @@
 ﻿#include <QString>
 #include <QDebug>
 #include <QPixmap>
+#include <QLabel>
+#include <QMovie>
 #include <QGraphicsProxyWidget>
 #include "skill.h"
 #include "maininfo.h"
@@ -62,10 +64,57 @@ void BattleScene::setupUi()
     addItem(skillButtonContainer);
 
     //增加敌我图片
-    QPixmap back(":/image/image/1b.png");
-    QPixmap front(":/image/image/1f.png");
-    auto item = addPixmap(back);
-    item->setPos(-300-m_width/2, 100-m_width/2);
-    item = addPixmap(front);
-    item->setPos(200-m_width/2, -300+m_width/2);
+    QLabel *gif_anim = new QLabel();
+    QString path = getGifPath(Face::Back,m_pokemon->id());
+    QMovie *movie = new QMovie(path);
+    movie->setScaledSize(QSize(200,200));
+    gif_anim->setMovie(movie);
+    movie->start();
+    QGraphicsProxyWidget *proxy = addWidget(gif_anim);
+    proxy->setPos(-300-m_width/2, 100-m_width/2);
+
+    gif_anim = new QLabel();
+    path = getGifPath(Face::Front,oppo_pokemon->id());
+    movie = new QMovie(path);
+    movie->setScaledSize(QSize(200,200));
+    gif_anim->setMovie(movie);
+    movie->start();
+    proxy = addWidget(gif_anim);
+    proxy->setPos(200-m_width/2, -300+m_width/2);
+}
+
+QString BattleScene::getGifPath(BattleScene::Face face, int id)
+{
+    QString path = "D:\\Pokemon_image_source\\%1\\gen.%2\\%3.gif";
+    QString qFace;
+    QString gen;
+    QString qID;
+
+    if(face == Face::Back){
+        qFace = "back";
+    }else{
+        qFace = "front";
+    }
+
+    if(id<152){
+        gen = "1";
+    }else if(id<252){
+        gen = "2";
+    }else if(id<387){
+        gen = "3";
+    }else if(id<494){
+        gen = "4";
+    }else{
+        gen = "5";
+    }
+
+    if(id < 10){
+        qID = "00"+ QString::number(id);
+    }else if(id<100){
+         qID = "0"+ QString::number(id);
+    }else{
+        qID = QString::number(id);
+    }
+
+    return path.arg(qFace).arg(gen).arg(qID);
 }
